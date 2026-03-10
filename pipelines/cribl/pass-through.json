@@ -1,0 +1,25 @@
+{
+  "id": "benchmark",
+  "conf": {
+    "asyncFuncTimeout": 1000,
+    "streamtags": [
+      "benchmark"
+    ],
+    "functions": [
+      {
+        "id": "sampling",
+        "filter": "true",
+        "conf": {
+          "rules": [
+            {
+              "filter": "true",
+              "rate": 20
+            }
+          ]
+        },
+        "final": true
+      }
+    ],
+    "groups": {}
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "benchmark",
+  "conf": {
+    "asyncFuncTimeout": 1000,
+    "streamtags": [
+      "benchmark"
+    ],
+    "functions": [
+      {
+        "id": "serde",
+        "filter": "true",
+        "conf": {
+          "mode": "extract",
+          "type": "json",
+          "srcField": "_raw",
+          "dstField": "attributes",
+          "keep": []
+        }
+      },
+      {
+        "id": "drop",
+        "filter": "attributes[\"pii\"][\"color\"] == 'Green'",
+        "disabled": false,
+        "conf": {}
+      },
+      {
+        "id": "sampling",
+        "filter": "true",
+        "conf": {
+          "rules": [
+            {
+              "filter": "true",
+              "rate": 20
+            }
+          ]
+        },
+        "final": true
+      }
+    ],
+    "groups": {}
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "id": "benchmark",
+  "conf": {
+    "asyncFuncTimeout": 1000,
+    "streamtags": [
+      "benchmark"
+    ],
+    "functions": [
+      {
+        "id": "serde",
+        "filter": "true",
+        "conf": {
+          "mode": "extract",
+          "type": "json",
+          "srcField": "_raw",
+          "dstField": "attributes",
+          "keep": []
+        }
+      },
+      {
+        "id": "lookup",
+        "filter": "true",
+        "disabled": false,
+        "conf": {
+          "dbLookup": false,
+          "matchMode": "exact",
+          "reloadPeriodSec": -1,
+          "inFields": [
+            {
+              "eventField": "attributes[\"pii\"][\"ipv4]",
+              "lookupField": "ipv4"
+            }
+          ],
+          "addToEvent": false,
+          "ignoreCase": false,
+          "file": "/tmp/lookup-benchmark.csv",
+          "outFields": [
+            {
+              "lookupField": "region",
+              "eventField": "region",
+              "defaultValue": "unknown"
+            },
+            {
+              "lookupField": "env",
+              "eventField": "env",
+              "defaultValue": "unknown"
+            }
+          ]
+        }
+      },
+      {
+        "id": "sampling",
+        "filter": "true",
+        "conf": {
+          "rules": [
+            {
+              "filter": "true",
+              "rate": 20
+            }
+          ]
+        },
+        "final": true
+      }
+    ],
+    "groups": {}
+  }
+}

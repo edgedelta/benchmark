@@ -35,3 +35,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore sensitive files
+aws_resources/*.pem
+aws_resources/benchmark_s3_user_credentials.txt
+
+# temporary folder
+temp/
