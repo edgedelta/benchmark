@@ -1,0 +1,9 @@
+# CODEOWNERS file for benchmark
+# This file defines who is responsible for code in this repository
+# and automatically requests reviews from code owners.
+#
+# More info: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# Pipeline and DevOps teams are responsible for the benchmarks
+* @edgedelta/pipeline @edgedelta/devops
