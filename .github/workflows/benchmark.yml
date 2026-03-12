@@ -2,11 +2,8 @@ name: Run HTTP Input Benchmark
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag to apply to the release"
-        required: true
-        type: string
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at 8:00 AM UTC
 
 env:
   CLAUDE_CODE_MAX_OUTPUT_TOKENS: 8192
@@ -21,6 +18,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Generate tag
+        id: tag
+        run: echo "value=$(date -u +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.5.7"
@@ -62,4 +62,5 @@ jobs:
         with:
           artifacts: benchmark_results/*/*.log
           bodyFile: benchmark_results/report.md
-          tag: ${{ inputs.tag }}
+          tag: ${{ steps.tag.outputs.value }}
+          name: "Benchmark Report - ${{ steps.tag.outputs.value }}"
