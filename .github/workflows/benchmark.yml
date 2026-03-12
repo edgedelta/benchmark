@@ -63,4 +63,4 @@ jobs:
           artifacts: benchmark_results/*/*.log
           bodyFile: benchmark_results/report.md
           tag: ${{ steps.tag.outputs.value }}
-          name: "Benchmark Results - ${{ steps.tag.outputs.value }}"
+          name: "Benchmark Report - ${{ steps.tag.outputs.value }}"

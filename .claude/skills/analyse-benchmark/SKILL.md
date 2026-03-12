@@ -39,22 +39,21 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 
 | Vendor | Avg Throughput | Peak Throughput | Total Logs | Avg CPU | Peak Memory | Rank |
 |--------|----------------|-----------------|------------|---------|-------------|------|
-| Vendor A | X.XX logs/sec 🥇 | Y.YY logs/sec | N | X.X% | XXX MB | 1 |
-| Vendor B | X.XX logs/sec | Y.YY logs/sec 🥇 | N | X.X% 🥇 | XXX MB 🥇 | 2 |
-| Vendor C | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 3 |
+| Edge Delta | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 1 |
+| Bindplane | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 2 |
+| Cribl | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 3 |
 
 ### Reliability Comparison
 
 | Vendor | Total Errors | Error Rate | Backpressure (429/503) | Backpressure % | Status |
 |--------|--------------|------------|------------------------|----------------|--------|
-| Vendor A | 0 | 0.00% | 0 | 0.0% | ✅ |
-| Vendor B | 5 | 0.05% | 0 | 0.0% | ✅ |
-| Vendor C | 0 | 0.00% | 120 | 12.5% | ⚠️ |
+| Edge Delta | 0 | 0.00% | 0 | 0.0% | ✅ |
+| Bindplane | 5 | 0.05% | 0 | 0.0% | ✅ |
+| Cribl | 0 | 0.00% | 120 | 12.5% | ⚠️ |
 
 ### Summary
-- **Best Throughput**: [Vendor] - X.XX logs/sec avg (Y% faster than others)
-- **Best Burst**: [Vendor] - Y.YY logs/sec peak (5-second window)
-- **Most Efficient**: [Vendor] - Lowest CPU (X.X%) and/or memory (XXX MB) per log processed
-- **Most Reliable**: [Vendor] - 0 errors, 0 backpressure
-- **Winner**: [Vendor] - [One sentence justification]
-- **Concerns**: [Any vendor with errors/backpressure/high resource usage] - [Brief issue: server overload, HTTP errors, CPU bottleneck, memory pressure, etc.]
+- **Throughput**: Edge Delta achieved X.XX logs/sec avg, Y% faster than Bindplane (X.XX logs/sec) and Z% faster than Cribl (X.XX logs/sec)
+- **Peak Performance**: Edge Delta reached Y.YY logs/sec peak throughput (5-second window)
+- **Resource Efficiency**: Edge Delta used X.X% CPU and XXX MB memory. Bindplane used X.X% CPU and XXX MB memory. Cribl used X.X% CPU and XXX MB memory.
+- **Reliability**: All vendors / [Vendor list] achieved 0 errors and 0 backpressure
+- **Key Observations**: [2-3 sentences summarizing Edge Delta's performance characteristics and any notable differences from competitors]
