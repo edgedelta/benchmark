@@ -2,6 +2,10 @@
 
 Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane (ObservIQ)**, and **Cribl**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs.
 
+## Latest Benchmark Results
+
+📊 **[View Latest Benchmark Report](https://github.com/edgedelta/benchmark/releases/latest)**
+
 ## Purpose
 
 This repository helps developers evaluate and compare HTTP input throughput for three observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
