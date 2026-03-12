@@ -11,7 +11,8 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 - Vendors: `edgedelta` knows as "Edge Delta", `observiq` knows as "Bindplane", `cribl` knows as "Cribl".
 - Configuration: `endpoint=<url> format=<format> workers=<n> period=<duration>`
 - `[STATS]` lines with: avg logs/sec, total logs, throughput MB/s, errors, backpressure
-- Ignore `[MONITOR - SELF]` lines
+- `[MONITOR - TARGET]` lines with: agent name, pid, cpu %, memory MB, threads
+- Ignore `[MONITOR - SELF]` lines (loadgen's own stats)
 
 # Metric Definitions
 
@@ -22,6 +23,11 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 - `errors: N` - HTTP errors (4xx/5xx responses)
 - `backpressure: N (X.X%)` - 429/503 responses indicating server overload
 
+**From [MONITOR - TARGET] lines:**
+- `cpu: X.X%` - CPU utilization percentage of the agent process
+- `memory: X.XMB` - Memory consumption of the agent process in MB
+- Calculate average CPU and peak memory across all measurements for each worker tier
+
 # Output Format
 
 ## Benchmark Scenario: [Scenario Name/Description]
@@ -31,11 +37,11 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 
 ### Performance Comparison
 
-| Vendor | Avg Throughput | Peak Throughput | Total Logs | Throughput CV | Rank |
-|--------|----------------|-----------------|------------|---------------|------|
-| Vendor A | X.XX logs/sec 🥇 | Y.YY logs/sec | N | 0.XX | 1 |
-| Vendor B | X.XX logs/sec | Y.YY logs/sec 🥇 | N | 0.XX 🥇 | 2 |
-| Vendor C | X.XX logs/sec | Y.YY logs/sec | N | 0.XX | 3 |
+| Vendor | Avg Throughput | Peak Throughput | Total Logs | Avg CPU | Peak Memory | Rank |
+|--------|----------------|-----------------|------------|---------|-------------|------|
+| Vendor A | X.XX logs/sec 🥇 | Y.YY logs/sec | N | X.X% | XXX MB | 1 |
+| Vendor B | X.XX logs/sec | Y.YY logs/sec 🥇 | N | X.X% 🥇 | XXX MB 🥇 | 2 |
+| Vendor C | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 3 |
 
 ### Reliability Comparison
 
@@ -48,7 +54,7 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 ### Summary
 - **Best Throughput**: [Vendor] - X.XX logs/sec avg (Y% faster than others)
 - **Best Burst**: [Vendor] - Y.YY logs/sec peak (5-second window)
-- **Most Stable**: [Vendor] - CV of X.XX (consistent performance)
+- **Most Efficient**: [Vendor] - Lowest CPU (X.X%) and/or memory (XXX MB) per log processed
 - **Most Reliable**: [Vendor] - 0 errors, 0 backpressure
 - **Winner**: [Vendor] - [One sentence justification]
-- **Concerns**: [Any vendor with errors/backpressure] - [Brief issue: server overload, HTTP errors, etc.]
+- **Concerns**: [Any vendor with errors/backpressure/high resource usage] - [Brief issue: server overload, HTTP errors, CPU bottleneck, memory pressure, etc.]
