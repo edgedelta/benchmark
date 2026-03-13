@@ -127,7 +127,7 @@ download_folder_from_ec2_instance() {
 
 # Bindplane (ObservIQ) agent installation
 get_bindplane_installation_command() {
-  agent_version="v1.94.2"
+  agent_version="latest"
   install_command=$(bindplane install agent --platform linux-amd64 --version ${agent_version} --agent-type observiq-otel-collector)
   echo "$install_command -k 'configuration=benchmark'"
   echo "sudo systemctl stop observiq-otel-collector"
