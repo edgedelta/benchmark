@@ -103,7 +103,7 @@ function run_bindplane_benchmark() {
   for type in "pass-through" "filter" "mask" "lookup"; do
     bindplane apply -f "$type.yaml"
     bindplane rollout start benchmark
-    trigger_benchmark "observiq" $type
+    trigger_benchmark "bindplane" $type
   done
   popd > /dev/null
 }

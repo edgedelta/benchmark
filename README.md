@@ -1,6 +1,6 @@
 # HTTP Input Benchmark Comparison
 
-Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane (ObservIQ)**, and **Cribl**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs.
+Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, and **Cribl**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs.
 
 ## Latest Benchmark Results
 
@@ -40,7 +40,7 @@ Set these before running `./run.sh`:
 | `CRIBL_CLIENT_SECRET` | Cribl API client secret             |
 | `CRIBL_LEADER_TOKEN`  | Cribl leader token (for agent install)|
 
-### Bindplane (ObservIQ)
+### Bindplane
 
 Bindplane uses the CLI profile rather than environment variables. Install the [Bindplane CLI](https://docs.bindplane.observiq.com/docs/bindplane-cli) and configure it with your API key:
 
@@ -55,7 +55,7 @@ bindplane profile set --apiKey YOUR_API_KEY
 ├── aws_resources/          # Terraform: EC2, S3, IAM
 ├── benchmark_scripts/      # Load generation and trigger scripts (run on EC2)
 ├── pipelines/              # Pipeline configs per platform
-│   ├── bindplane/          # Bindplane (ObservIQ) YAML configs
+│   ├── bindplane/          # Bindplane YAML configs
 │   ├── cribl/              # Cribl JSON configs and API helper
 │   └── edgedelta/          # Edge Delta YAML configs and API helper
 ├── scripts/                # Agent install scripts (generated/dynamic)
@@ -95,7 +95,7 @@ From the repository root:
 1. **Checks prerequisites** – Validates env vars and Bindplane CLI config
 2. **Creates AWS resources** – Runs `terraform apply` in `aws_resources/`
 3. **Prepares EC2** – Uploads benchmark scripts and lookup CSV
-4. **Runs benchmarks** – For each platform (Edge Delta → Bindplane (ObservIQ) → Cribl):
+4. **Runs benchmarks** – For each platform (Edge Delta → Bindplane → Cribl):
    - Installs or configures the agent
    - For each pipeline type (pass-through, filter, mask, lookup):
      - Applies the pipeline config
@@ -117,7 +117,7 @@ From the repository root:
 
 ## Results
 
-Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `observiq` = Bindplane (ObservIQ), `cribl` = Cribl.
+Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl.
 
 ```
 benchmark_results/
@@ -126,10 +126,10 @@ benchmark_results/
     ├── edgedelta_filter.log
     ├── edgedelta_mask.log
     ├── edgedelta_lookup.log
-    ├── observiq_pass-through.log
-    ├── observiq_filter.log
-    ├── observiq_mask.log
-    ├── observiq_lookup.log
+    ├── bindplane_pass-through.log
+    ├── bindplane_filter.log
+    ├── bindplane_mask.log
+    ├── bindplane_lookup.log
     ├── cribl_pass-through.log
     ├── cribl_filter.log
     ├── cribl_mask.log

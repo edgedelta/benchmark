@@ -2,13 +2,13 @@
 
 set -e
 
-# App identifiers: edgedelta (Edge Delta), observiq (Bindplane/ObservIQ), cribl (Cribl)
+# App identifiers: edgedelta (Edge Delta), bindplane (Bindplane), cribl (Cribl)
 app=$1
 type=$2
 
 if [[ -z "$app" ]]; then
   echo "Select app for benchmark:"
-  select app in edgedelta observiq cribl; do
+  select app in edgedelta bindplane cribl; do
     if [[ -n "$app" ]]; then
       break
     fi

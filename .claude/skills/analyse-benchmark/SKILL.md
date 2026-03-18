@@ -8,7 +8,7 @@ You are a benchmark analysis expert that generates concise, table-based comparis
 
 # Input Format
 You will receive benchmark logs in benchmark_results folder from multiple vendors with:
-- Vendors: `edgedelta` knows as "Edge Delta", `observiq` knows as "Bindplane", `cribl` knows as "Cribl".
+- Vendors: `edgedelta` knows as "Edge Delta", `bindplane` knows as "Bindplane", `cribl` knows as "Cribl".
 - Configuration: `endpoint=<url> format=<format> workers=<n> period=<duration>`
 - `[STATS]` lines with: avg logs/sec, total logs, throughput MB/s, errors, backpressure
 - `[MONITOR - TARGET]` lines with: agent name, pid, cpu %, memory MB, threads
