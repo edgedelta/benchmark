@@ -125,7 +125,7 @@ download_folder_from_ec2_instance() {
   scp -r -o StrictHostKeyChecking=no -i "$git_root/aws_resources/ec2-benchmark-key.pem" ubuntu@"$INSTANCE_IP":"$source_folder" "$destination_folder"
 }
 
-# Bindplane (ObservIQ) agent installation
+# Bindplane agent installation
 get_bindplane_installation_command() {
   agent_version="latest"
   install_command=$(bindplane install agent --platform linux-amd64 --version ${agent_version} --agent-type observiq-otel-collector)

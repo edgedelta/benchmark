@@ -11,7 +11,7 @@ fi
 if [[ "$app" == "edgedelta" ]]; then
   service="edgedelta.service"
   port=8085
-elif [[ "$app" == "observiq" ]]; then
+elif [[ "$app" == "bindplane" ]]; then
   service="observiq-otel-collector"
   port=7075
 elif [[ "$app" == "cribl" ]]; then
@@ -95,6 +95,16 @@ for i in 80 100 120; do
     if [[ -n "$cribl_monitor_pid" ]]; then
       kill "$cribl_monitor_pid" 2>/dev/null || true
     fi
+  elif [[ "$app" == "bindplane" ]]; then
+    loadgen \
+      --endpoint http://localhost:$port \
+      --format nginx_log \
+      --number 1 \
+      --workers "$i" \
+      --period 1ms \
+      --total-time 1m \
+      --monitor-self \
+      --monitor-process "observiq"
   else
     loadgen \
       --endpoint http://localhost:$port \
