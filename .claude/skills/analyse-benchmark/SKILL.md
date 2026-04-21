@@ -30,6 +30,8 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 
 # Output Format
 
+**Table Orientation Rule:** In every table you produce (per-scenario tables and cross-scenario summary tables alike), vendors MUST appear as rows in the first column. Never use vendor names as column headers. If you need to compare a metric across scenarios, put scenarios as columns and vendors as rows.
+
 ## Benchmark Scenario: [Scenario Name/Description]
 
 **Test Configuration:**
@@ -57,3 +59,23 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 - **Resource Efficiency**: Edge Delta used X.X% CPU and XXX MB memory. Bindplane used X.X% CPU and XXX MB memory. Cribl used X.X% CPU and XXX MB memory.
 - **Reliability**: All vendors / [Vendor list] achieved 0 errors and 0 backpressure
 - **Key Observations**: [2-3 sentences summarizing Edge Delta's performance characteristics and any notable differences from competitors]
+
+## Cross-Scenario Summary
+
+When producing cross-scenario tables (e.g. average throughput or resource efficiency across all scenarios), vendors remain as rows in the first column and scenarios become columns.
+
+### Average Throughput (logs/sec)
+
+| Vendor | Pass-Through | Filter | Mask | Lookup |
+|--------|--------------|--------|------|--------|
+| Edge Delta | X.XX | X.XX | X.XX | X.XX |
+| Bindplane | X.XX | X.XX | X.XX | X.XX |
+| Cribl | X.XX | X.XX | X.XX | X.XX |
+
+### Resource Efficiency (Across Scenarios)
+
+| Vendor | Avg CPU | Avg Peak Memory | Throughput per CPU % |
+|--------|---------|-----------------|----------------------|
+| Edge Delta | X.X% | XXX MB | X.XX |
+| Bindplane | X.X% | XXX MB | X.XX |
+| Cribl | X.X% | XXX MB | X.XX |
