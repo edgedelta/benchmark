@@ -131,6 +131,18 @@ function run_cribl_benchmark() {
   popd > /dev/null
 }
 
+function run_otelcol_benchmark() {
+  echo "Running OpenTelemetry Collector benchmark..."
+  echo "Installing OpenTelemetry Collector agent..."
+  run_scripts_on_ec2_instance "$git_root/scripts/install_agent_otelcol.sh"
+  upload_folder_to_ec2_instance "$git_root/pipelines/otelcol"
+  # No lookup scenario: OTel contrib has no shipped CSV lookup processor.
+  for type in "pass-through" "filter" "mask"; do
+    run_command_on_ec2_instance "sudo cp /home/ubuntu/otelcol/$type.yaml /etc/otelcol-contrib/config.yaml"
+    trigger_benchmark "otelcol" $type
+  done
+}
+
 
 function download_benchmark_results() {
   date_tag=$(date +%Y%m%d_%H%M%S)
@@ -147,4 +159,5 @@ prepare_for_benchmark
 run_ed_benchmark
 run_bindplane_benchmark
 run_cribl_benchmark
+run_otelcol_benchmark
 download_benchmark_results

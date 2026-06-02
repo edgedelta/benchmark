@@ -17,6 +17,9 @@ elif [[ "$app" == "bindplane" ]]; then
 elif [[ "$app" == "cribl" ]]; then
   service="cribl-edge.service"
   port=6085
+elif [[ "$app" == "otelcol" ]]; then
+  service="otelcol-contrib.service"
+  port=5085
 else
   echo "Invalid app"
   exit 1
@@ -105,6 +108,16 @@ for i in 80 100 120; do
       --total-time 1m \
       --monitor-self \
       --monitor-process "observiq"
+  elif [[ "$app" == "otelcol" ]]; then
+    loadgen \
+      --endpoint http://localhost:$port \
+      --format nginx_log \
+      --number 1 \
+      --workers "$i" \
+      --period 1ms \
+      --total-time 1m \
+      --monitor-self \
+      --monitor-process "otelcol-contrib"
   else
     loadgen \
       --endpoint http://localhost:$port \
