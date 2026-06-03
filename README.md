@@ -1,6 +1,6 @@
 # HTTP Input Benchmark Comparison
 
-Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, and **Cribl**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs.
+Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, **Cribl**, and the **OpenTelemetry Collector**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs. The OpenTelemetry Collector runs pass-through, filter, and mask only — its contrib distribution ships no CSV lookup processor, so lookup is reported as N/A.
 
 ## Latest Benchmark Results
 
@@ -8,7 +8,7 @@ Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **
 
 ## Purpose
 
-This repository helps developers evaluate and compare HTTP input throughput for three observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
+This repository helps developers evaluate and compare HTTP input throughput for four observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
 
 ## Prerequisites
 
@@ -57,7 +57,8 @@ bindplane profile set --apiKey YOUR_API_KEY
 ├── pipelines/              # Pipeline configs per platform
 │   ├── bindplane/          # Bindplane YAML configs
 │   ├── cribl/              # Cribl JSON configs and API helper
-│   └── edgedelta/          # Edge Delta YAML configs and API helper
+│   ├── edgedelta/          # Edge Delta YAML configs and API helper
+│   └── otelcol/            # OpenTelemetry Collector YAML configs
 ├── scripts/                # Agent install scripts (generated/dynamic)
 ├── benchmark_results/      # Downloaded results (gitignored)
 ├── run.sh                  # Main entry point
@@ -117,7 +118,7 @@ From the repository root:
 
 ## Results
 
-Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl.
+Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
 
 ```
 benchmark_results/
@@ -133,7 +134,10 @@ benchmark_results/
     ├── cribl_pass-through.log
     ├── cribl_filter.log
     ├── cribl_mask.log
-    └── cribl_lookup.log
+    ├── cribl_lookup.log
+    ├── otelcol_pass-through.log
+    ├── otelcol_filter.log
+    └── otelcol_mask.log
 ```
 
 Each log contains loadgen output with throughput (logs/sec), CPU/memory usage, and error counts.

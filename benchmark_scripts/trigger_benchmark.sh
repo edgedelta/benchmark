@@ -2,13 +2,13 @@
 
 set -e
 
-# App identifiers: edgedelta (Edge Delta), bindplane (Bindplane), cribl (Cribl)
+# App identifiers: edgedelta (Edge Delta), bindplane (Bindplane), cribl (Cribl), otelcol (OpenTelemetry Collector)
 app=$1
 type=$2
 
 if [[ -z "$app" ]]; then
   echo "Select app for benchmark:"
-  select app in edgedelta bindplane cribl; do
+  select app in edgedelta bindplane cribl otelcol; do
     if [[ -n "$app" ]]; then
       break
     fi
