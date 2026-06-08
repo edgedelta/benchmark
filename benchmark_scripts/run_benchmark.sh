@@ -38,30 +38,24 @@ if ! sudo systemctl start "$service"; then
   exit 1
 fi
 
-# Wait for service to be ready
-echo "Waiting for service to be ready..."
-sleep 30
-
-# Verify service is running
-if ! sudo systemctl is-active --quiet "$service"; then
-  echo "Service $service is not active after start"
-  exit 1
-fi
-
-# Verify service port is listening (retry for up to 60 seconds)
-echo "Checking that port $port is listening (up to 60s)..."
+# Wait for service port to be ready (up to 3 minutes)
+echo "Waiting for port $port to be listening (up to 3m)..."
 port_ready=false
-for ((i=0; i<60; i++)); do
+for ((i=0; i<180; i++)); do
   if nc -z localhost "$port" 2>/dev/null; then
-    echo "Port $port is listening on localhost"
+    echo "Port $port is listening on localhost (after ${i}s)"
     port_ready=true
     break
+  fi
+  if ! sudo systemctl is-active --quiet "$service"; then
+    echo "Service $service stopped unexpectedly while waiting for port"
+    exit 1
   fi
   sleep 1
 done
 
 if [[ "$port_ready" != true ]]; then
-  echo "Port $port did not start listening on localhost within 60 seconds"
+  echo "Port $port did not start listening on localhost within 3 minutes"
   exit 1
 fi
 
