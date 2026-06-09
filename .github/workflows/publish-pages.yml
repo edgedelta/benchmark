@@ -62,7 +62,7 @@ jobs:
 
       - name: Refresh site files from master source
         run: |
-          rsync -a --delete --exclude data --exclude .git --exclude .nojekyll src/site/ pages/
+          rsync -a --delete --exclude 'data/' --exclude '.git' --exclude '.nojekyll' src/site/ pages/
           touch pages/.nojekyll
 
       - name: Commit and push to gh-pages
