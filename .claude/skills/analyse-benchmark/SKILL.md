@@ -94,3 +94,37 @@ When producing cross-scenario tables (e.g. average throughput or resource effici
 | Bindplane | X.X% | XXX MB | X.XX |
 | Cribl | X.X% | XXX MB | X.XX |
 | OpenTelemetry Collector | X.X% | XXX MB | X.XX |
+
+## Machine-Readable Output (`data.json`)
+
+In addition to `report.md`, write **`benchmark_results/data.json`** containing the
+exact same numbers used in the report. This file feeds the GitHub Pages chart, so
+it must be valid JSON and follow this schema precisely:
+
+```json
+{
+  "runId": "<benchmark_results subdir timestamp, e.g. 20260608_111614>",
+  "date": "<YYYY-MM-DD>",
+  "scenarios": ["Pass-Through", "Filter", "Mask", "Lookup"],
+  "versions": { "ed": "<version>", "bp": "<version>", "otel": "<version>", "cribl": "<version>" },
+  "vendors": {
+    "ed":    { "name": "Edge Delta",              "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
+    "bp":    { "name": "Bindplane",               "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
+    "otel":  { "name": "OpenTelemetry Collector", "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
+    "cribl": { "name": "Cribl",                   "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n }
+  }
+}
+```
+
+Rules:
+- Vendor keys are fixed: `ed`, `bp`, `otel`, `cribl`. Always include all four.
+- `avg` and `peak` are length-4 arrays aligned to `scenarios` order. Use `null`
+  (JSON null, not the string "N/A") for any scenario a vendor did not run or where
+  it failed to start (e.g. OTel `Lookup`, or a vendor that failed a scenario).
+- `cpu` = average CPU% across scenarios; `mem` = average peak memory (MB) across
+  scenarios; `perCpu` = throughput per CPU% — the same values as the
+  "Resource Efficiency (Across Scenarios)" table. Use `null` if not measurable.
+- After writing the file, re-read it and confirm it parses as JSON and every
+  `avg`/`peak` array has exactly 4 elements. Fix and rewrite if not.
+- The GitHub Pages publish workflow overrides `runId`/`date` with the release tag,
+  so approximate values there are fine, but keep them present.
