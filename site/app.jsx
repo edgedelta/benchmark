@@ -124,6 +124,76 @@ function EfficiencyView({ eff }) {
   );
 }
 
+/* ───── Trend (line chart over time) ───── */
+function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }) {
+  const W = 1040, H = 440, padL = 58, padR = 18, padT = 18, padB = 42;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const n = history.length;
+
+  const series = VENDORS.map((v) => ({
+    v,
+    pts: history.map((r, i) => {
+      const vd = r.vendors && r.vendors[v.key];
+      const arr = vd ? vd[metric] : null;
+      const val = arr && arr[scenarioIndex] != null ? arr[scenarioIndex] : null;
+      return { i, val, date: r.date };
+    }),
+  }));
+
+  const vals = [];
+  series.forEach((s) => { if (visible.has(s.v.key)) s.pts.forEach((p) => { if (p.val != null) vals.push(p.val); }); });
+  const { max: yMax, ticks } = niceScale(vals.length ? Math.max(...vals) : 10);
+
+  const X = (i) => (n <= 1 ? padL + plotW / 2 : padL + (i / (n - 1)) * plotW);
+  const Y = (val) => padT + plotH - (val / yMax) * plotH;
+  const step = Math.max(1, Math.ceil(n / 8));
+
+  return (
+    <div className="trend-plot">
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}>
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={padL} x2={W - padR} y1={Y(t)} y2={Y(t)} stroke="var(--ed-border-1)" strokeWidth="1" />
+            <text x={padL - 10} y={Y(t)} textAnchor="end" dominantBaseline="middle" fontFamily="var(--ed-font-mono)" fontSize="11" fill="var(--ed-text-secondary)">{fmtK(t)}</text>
+          </g>
+        ))}
+        <line x1={padL} x2={W - padR} y1={Y(0)} y2={Y(0)} stroke="var(--ed-border-2)" strokeWidth="1" />
+        {history.map((r, i) => (i % step === 0 || i === n - 1) ? (
+          <text key={i} x={X(i)} y={H - padB + 20} textAnchor="middle" fontFamily="var(--ed-font-mono)" fontSize="10.5" fill="var(--ed-text-secondary)">{r.date.slice(5)}</text>
+        ) : null)}
+        {series.map((s) => {
+          if (!visible.has(s.v.key)) return null;
+          const isEd = s.v.key === "ed";
+          const segs = []; let cur = [];
+          s.pts.forEach((p) => { if (p.val == null) { if (cur.length) segs.push(cur); cur = []; } else cur.push(p); });
+          if (cur.length) segs.push(cur);
+          return (
+            <g key={s.v.key}>
+              {segs.map((seg, k) => (
+                <polyline key={k} fill="none" stroke={vendorColor(s.v.key)} strokeWidth={isEd ? 2.6 : 1.6}
+                  strokeLinejoin="round" strokeLinecap="round" points={seg.map((p) => `${X(p.i)},${Y(p.val)}`).join(" ")} />
+              ))}
+              {s.pts.map((p) => p.val == null ? null : (
+                <circle key={p.i} cx={X(p.i)} cy={Y(p.val)} r={isEd ? 3.6 : 3} fill="var(--ed-surface-1)"
+                  stroke={vendorColor(s.v.key)} strokeWidth="2" style={{ cursor: "pointer" }}
+                  onMouseEnter={() => setHover({ key: s.v.key, name: s.v.name, val: p.val, date: p.date, x: X(p.i), y: Y(p.val) })}
+                  onMouseLeave={() => setHover(null)} />
+              ))}
+            </g>
+          );
+        })}
+      </svg>
+      {hover && (
+        <div className="trend-tip" style={{ left: (hover.x / W * 100) + "%", top: (hover.y / H * 100) + "%" }}>
+          <div className="tip-v" style={{ color: vendorColor(hover.key) }}>{hover.name}</div>
+          <div className="tip-s">{SCENARIOS[scenarioIndex]} · {hover.date}</div>
+          <div className="tip-n">{fmt(hover.val)} <span>logs/sec</span></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ───── App ───── */
 function App() {
   const [history, setHistory] = React.useState(null);
