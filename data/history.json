@@ -1,0 +1,1192 @@
+[
+  {
+    "runId": "20260312-125107",
+    "date": "2026-03-12",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          58659.15,
+          47028.06,
+          31471.3,
+          36889.55
+        ],
+        "peak": [
+          60099.67,
+          47378.33,
+          41552.77,
+          47353.49
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          28387.12,
+          28442,
+          28094.6,
+          28276.39
+        ],
+        "peak": [
+          29795.25,
+          29933.94,
+          29660.74,
+          29303.18
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2229.28,
+          2305.39,
+          2045.84,
+          2301.89
+        ],
+        "peak": [
+          2315.34,
+          2454.7,
+          2154.96,
+          2441.71
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260316-082308",
+    "date": "2026-03-16",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          58032.05,
+          43744.86,
+          28876.08,
+          35226.15
+        ],
+        "peak": [
+          58913.65,
+          46732.01,
+          36476.59,
+          45132.96
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          28970.53,
+          28839.24,
+          29098.63,
+          28323
+        ],
+        "peak": [
+          31419.5,
+          30516.88,
+          30476.39,
+          29468.34
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2266.4,
+          2183.26,
+          2030.65,
+          2185.25
+        ],
+        "peak": [
+          2433.83,
+          2317.81,
+          2133.7,
+          2304.46
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260323-081935",
+    "date": "2026-03-23",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          55453.88,
+          33996.3,
+          28226.74,
+          34506.73
+        ],
+        "peak": [
+          55891.54,
+          36742.2,
+          28193.04,
+          44952.77
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29119,
+          28881,
+          28560.49,
+          27851.02
+        ],
+        "peak": [
+          30476.35,
+          29811.02,
+          29655.4,
+          29221.07
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2351.27,
+          2211.75,
+          2040.51,
+          2184.27
+        ],
+        "peak": [
+          2474.7,
+          2337.39,
+          2668.41,
+          2316.86
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260330-083233",
+    "date": "2026-03-30",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          53760.04,
+          31631.07,
+          26846.11,
+          31152.45
+        ],
+        "peak": [
+          54328.91,
+          32373.99,
+          27937.63,
+          36550.34
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          1769.75,
+          1731.27,
+          1623.74,
+          1725.6
+        ],
+        "peak": [
+          1835.44,
+          1822.39,
+          1694.84,
+          1805.79
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260406-083231",
+    "date": "2026-04-06",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          54275.1,
+          37599.82,
+          28239.23,
+          32717.71
+        ],
+        "peak": [
+          54795.62,
+          44993.05,
+          38377.46,
+          43439.97
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          26868.29,
+          27252.92,
+          27276.76,
+          27260.14
+        ],
+        "peak": [
+          27906.61,
+          28620.92,
+          28210.7,
+          28453.07
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          1802.72,
+          1759.02,
+          1648.8,
+          1745.93
+        ],
+        "peak": [
+          1846.58,
+          1834.58,
+          1724.44,
+          1827.77
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260413-084241",
+    "date": "2026-04-13",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          57072.34,
+          42517.91,
+          31013.96,
+          38001.95
+        ],
+        "peak": [
+          57348.93,
+          46409.62,
+          41419.97,
+          45506.47
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          27474.98,
+          27754.38,
+          27081.64,
+          27360.7
+        ],
+        "peak": [
+          28750.22,
+          28892.47,
+          27973.23,
+          28982.81
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2382.66,
+          2233.9,
+          2033.78,
+          2206.64
+        ],
+        "peak": [
+          2525.16,
+          2356.42,
+          2139.01,
+          2374.69
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      }
+    }
+  },
+  {
+    "runId": "20260421-062717",
+    "date": "2026-04-21",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          58055.44,
+          41885.26,
+          30927.19,
+          45703.75
+        ],
+        "peak": [
+          58476.61,
+          47840.77,
+          42202.89,
+          46036.2
+        ],
+        "cpu": 345.9,
+        "mem": 230,
+        "perCpu": 127.6
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29457.76,
+          29011.23,
+          28623.45,
+          29204.61
+        ],
+        "peak": [
+          30520.02,
+          30321.55,
+          29337.15,
+          31055.29
+        ],
+        "cpu": 223.1,
+        "mem": 284.3,
+        "perCpu": 130.3
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2416.91,
+          2238.56,
+          2053.88,
+          2233.23
+        ],
+        "peak": [
+          2569.74,
+          2379.35,
+          2167.48,
+          2364.16
+        ],
+        "cpu": 101.3,
+        "mem": 633.4,
+        "perCpu": 22.1
+      }
+    }
+  },
+  {
+    "runId": "20260504-085030",
+    "date": "2026-05-04",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          57452.95,
+          47664.69,
+          41733.01,
+          45981.6
+        ],
+        "peak": [
+          57778.19,
+          47960.2,
+          42064.66,
+          46479.08
+        ],
+        "cpu": 476.8,
+        "mem": 225.7,
+        "perCpu": 101.1
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          28598.49,
+          28992.72,
+          29199.34,
+          29031.57
+        ],
+        "peak": [
+          29252.72,
+          29987.56,
+          29864.28,
+          29732.03
+        ],
+        "cpu": 253.8,
+        "mem": 287.2,
+        "perCpu": 114.1
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          null,
+          2116.23,
+          1922.11,
+          2065.23
+        ],
+        "peak": [
+          null,
+          2226.19,
+          2045.71,
+          2203.2
+        ],
+        "cpu": 101.2,
+        "mem": 628.9,
+        "perCpu": 20.1
+      }
+    }
+  },
+  {
+    "runId": "20260511-090813",
+    "date": "2026-05-11",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          61541.59,
+          50376.44,
+          44300.06,
+          49660.53
+        ],
+        "peak": [
+          62063.84,
+          50720.07,
+          44691.97,
+          49972.63
+        ],
+        "cpu": 475.1,
+        "mem": 227.2,
+        "perCpu": 108.52
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29623.16,
+          29316.43,
+          29576.63,
+          29473.59
+        ],
+        "peak": [
+          30962.25,
+          31038.17,
+          30688.31,
+          30944.38
+        ],
+        "cpu": 248.3,
+        "mem": 284.5,
+        "perCpu": 118.92
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2404.73,
+          2293.57,
+          2055.59,
+          2250.64
+        ],
+        "peak": [
+          2567.18,
+          2446.61,
+          2177.7,
+          2392
+        ],
+        "cpu": 100.8,
+        "mem": 621.3,
+        "perCpu": 22.38
+      }
+    }
+  },
+  {
+    "runId": "20260518-091044",
+    "date": "2026-05-18",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          58860.76,
+          47850.96,
+          41667.08,
+          42068.18
+        ],
+        "peak": [
+          59181.69,
+          48258.59,
+          42204.12,
+          46395.39
+        ],
+        "cpu": 439.3,
+        "mem": 226.9,
+        "perCpu": 110.2
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29867.63,
+          29932.19,
+          30298.77,
+          30194.48
+        ],
+        "peak": [
+          31471.14,
+          31227.15,
+          31306.64,
+          31160.27
+        ],
+        "cpu": 248.3,
+        "mem": 285.2,
+        "perCpu": 121.2
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2355.4,
+          2190,
+          2063.11,
+          2158.43
+        ],
+        "peak": [
+          2569.61,
+          2319.55,
+          2193.02,
+          2303.2
+        ],
+        "cpu": 101.1,
+        "mem": 625.3,
+        "perCpu": 21.7
+      }
+    }
+  },
+  {
+    "runId": "20260525-092036",
+    "date": "2026-05-25",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          60554.89,
+          48939.49,
+          42465.22,
+          48097.39
+        ],
+        "peak": [
+          60759.81,
+          49230.2,
+          42929.27,
+          48373.92
+        ],
+        "cpu": 448.3,
+        "mem": 227.7,
+        "perCpu": 111.6
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29173.15,
+          29131.09,
+          28019.96,
+          27914.98
+        ],
+        "peak": [
+          30602,
+          29877.12,
+          29320.28,
+          29316.33
+        ],
+        "cpu": 233.6,
+        "mem": 285.3,
+        "perCpu": 122.3
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          null,
+          2360.77,
+          2138.32,
+          2242.13
+        ],
+        "peak": [
+          null,
+          2485.02,
+          2274.23,
+          2369.4
+        ],
+        "cpu": 101,
+        "mem": 670.8,
+        "perCpu": 22.2
+      }
+    }
+  },
+  {
+    "runId": "20260601-095016",
+    "date": "2026-06-01",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          60069.19,
+          48959.31,
+          40622.62,
+          44935.96
+        ],
+        "peak": [
+          60870.89,
+          49637,
+          40808.72,
+          45337.09
+        ],
+        "cpu": 450.8,
+        "mem": 224.7,
+        "perCpu": 110.2
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          30161.45,
+          30370.51,
+          30060.82,
+          30302.81
+        ],
+        "peak": [
+          31474.42,
+          31080.44,
+          31923.51,
+          32440.03
+        ],
+        "cpu": 213.1,
+        "mem": 281.9,
+        "perCpu": 142
+      },
+      "otel": {
+        "name": null,
+        "avg": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "peak": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "cpu": null,
+        "mem": null,
+        "perCpu": null
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2253.75,
+          2157.63,
+          1991.24,
+          2120.46
+        ],
+        "peak": [
+          2364.35,
+          2258.96,
+          2104.39,
+          2256.03
+        ],
+        "cpu": 100.9,
+        "mem": 681,
+        "perCpu": 21.1
+      }
+    }
+  },
+  {
+    "runId": "20260603-071518",
+    "date": "2026-06-03",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          58608.73,
+          47889.73,
+          42240.1,
+          46601.21
+        ],
+        "peak": [
+          59316.1,
+          47996.82,
+          42567.19,
+          48165.51
+        ],
+        "cpu": 393.2,
+        "mem": 228.7,
+        "perCpu": 124.53
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          29687.09,
+          31135.13,
+          30737,
+          29452.35
+        ],
+        "peak": [
+          31841.12,
+          32278.53,
+          32044.65,
+          30960.73
+        ],
+        "cpu": 209.4,
+        "mem": 287.6,
+        "perCpu": 144.6
+      },
+      "otel": {
+        "name": "OpenTelemetry Collector",
+        "avg": [
+          16363.26,
+          14196.56,
+          6310.4,
+          null
+        ],
+        "peak": [
+          16714.42,
+          14662.94,
+          6560.28,
+          null
+        ],
+        "cpu": 352.6,
+        "mem": 321.6,
+        "perCpu": 34.86
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          2320.28,
+          2203,
+          2039.82,
+          2230.43
+        ],
+        "peak": [
+          2457.7,
+          2321.61,
+          2201.08,
+          2348.02
+        ],
+        "cpu": 50.5,
+        "mem": 485.1,
+        "perCpu": 42.69
+      }
+    }
+  },
+  {
+    "runId": "20260608-093535",
+    "date": "2026-06-08",
+    "scenarios": [
+      "Pass-Through",
+      "Filter",
+      "Mask",
+      "Lookup"
+    ],
+    "versions": {},
+    "vendors": {
+      "ed": {
+        "name": "Edge Delta",
+        "avg": [
+          61507.4,
+          49809.38,
+          43978.22,
+          50028.68
+        ],
+        "peak": [
+          61974.55,
+          50191.85,
+          44346.5,
+          50377.4
+        ],
+        "cpu": 447.1,
+        "mem": 226.1,
+        "perCpu": 114.8
+      },
+      "bp": {
+        "name": "Bindplane",
+        "avg": [
+          30896.33,
+          31072.44,
+          30507.68,
+          30621.43
+        ],
+        "peak": [
+          32517.43,
+          32464.52,
+          32293.87,
+          32178.8
+        ],
+        "cpu": 200.1,
+        "mem": 286.6,
+        "perCpu": 153.8
+      },
+      "otel": {
+        "name": "OpenTelemetry Collector",
+        "avg": [
+          16849.75,
+          14536.08,
+          6414.37,
+          null
+        ],
+        "peak": [
+          17280.11,
+          14920.05,
+          6682.03,
+          null
+        ],
+        "cpu": 351.3,
+        "mem": 324.9,
+        "perCpu": 35.9
+      },
+      "cribl": {
+        "name": "Cribl",
+        "avg": [
+          null,
+          2391.64,
+          2119.4,
+          2299.05
+        ],
+        "peak": [
+          null,
+          2527.62,
+          2245.63,
+          2432.81
+        ],
+        "cpu": 100.9,
+        "mem": 751,
+        "perCpu": 22.5
+      }
+    }
+  }
+]
