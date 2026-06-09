@@ -1,0 +1,79 @@
+name: Publish Benchmark Page
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout master (site source + tools)
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          path: src
+
+      - name: Checkout gh-pages (existing data)
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          path: pages
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Resolve release tag
+        id: rel
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$(gh release view --repo ${{ github.repository }} --json tagName -q .tagName)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download data.json from release (if present)
+        run: |
+          gh release download "${{ steps.rel.outputs.tag }}" \
+            --repo ${{ github.repository }} --pattern data.json --dir . \
+            || echo "no data.json on this release (older run) — keeping existing history"
+
+      - name: Merge data into history
+        run: |
+          mkdir -p pages/data
+          [ -f pages/data/history.json ] || echo "[]" > pages/data/history.json
+          if [ -f data.json ]; then
+            cp pages/data/history.json existing.json
+            node src/tools/merge-history.mjs existing.json data.json pages/data/history.json "${{ steps.rel.outputs.tag }}"
+          else
+            echo "skipping merge; no data.json"
+          fi
+
+      - name: Refresh site files from master source
+        run: |
+          rsync -a --delete --exclude data --exclude .git --exclude .nojekyll src/site/ pages/
+          touch pages/.nojekyll
+
+      - name: Commit and push to gh-pages
+        run: |
+          cd pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no changes to publish"
+          else
+            git commit -m "Publish benchmark page for ${{ steps.rel.outputs.tag }}"
+            git push origin HEAD:gh-pages
+          fi
