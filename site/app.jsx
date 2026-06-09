@@ -24,7 +24,7 @@ function niceScale(maxVal, targetTicks = 7) {
   const max = Math.ceil(maxVal / niceStep) * niceStep;
   const ticks = [];
   for (let t = 0; t <= max + niceStep * 0.5; t += niceStep) ticks.push(Math.round(t));
-  return { max, ticks };
+  return { max, ticks: [...new Set(ticks)] };
 }
 
 /* ───── Throughput (grouped bars) ───── */
@@ -148,6 +148,8 @@ function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }
   const Y = (val) => padT + plotH - (val / yMax) * plotH;
   const step = Math.max(1, Math.ceil(n / 8));
 
+  React.useEffect(() => { setHover(null); }, [scenarioIndex, metric]);
+
   return (
     <div className="trend-plot">
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}>
@@ -159,7 +161,7 @@ function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }
         ))}
         <line x1={padL} x2={W - padR} y1={Y(0)} y2={Y(0)} stroke="var(--ed-border-2)" strokeWidth="1" />
         {history.map((r, i) => (i % step === 0 || i === n - 1) ? (
-          <text key={i} x={X(i)} y={H - padB + 20} textAnchor="middle" fontFamily="var(--ed-font-mono)" fontSize="10.5" fill="var(--ed-text-secondary)">{r.date.slice(5)}</text>
+          <text key={i} x={X(i)} y={H - padB + 20} textAnchor="middle" fontFamily="var(--ed-font-mono)" fontSize="10.5" fill="var(--ed-text-secondary)">{(r.date ?? "").slice(5)}</text>
         ) : null)}
         {series.map((s) => {
           if (!visible.has(s.v.key)) return null;
@@ -218,7 +220,7 @@ function App() {
   const latest = history[history.length - 1];
   const AVG = {}, PEAK = {}, EFF = {};
   VENDORS.forEach((v) => {
-    const vd = latest.vendors[v.key] || {};
+    const vd = latest.vendors?.[v.key] || {};
     AVG[v.key] = vd.avg || [null, null, null, null];
     PEAK[v.key] = vd.peak || [null, null, null, null];
     EFF[v.key] = { cpu: vd.cpu ?? null, mem: vd.mem ?? null, perCpu: vd.perCpu ?? null };
@@ -263,8 +265,8 @@ function App() {
           </div>
           <div className="controls">
             <div className="seg">
-              <button className={view === "throughput" ? "on" : ""} onClick={() => setView("throughput")}>Throughput</button>
-              <button className={view === "efficiency" ? "on" : ""} onClick={() => setView("efficiency")}>Efficiency</button>
+              <button className={view === "throughput" ? "on" : ""} onClick={() => { setView("throughput"); setHover(null); }}>Throughput</button>
+              <button className={view === "efficiency" ? "on" : ""} onClick={() => { setView("efficiency"); setHover(null); }}>Efficiency</button>
               <button className={view === "trend" ? "on" : ""} onClick={() => setView("trend")}>Trend</button>
             </div>
             {(view === "throughput" || view === "trend") && (
