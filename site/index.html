@@ -26,6 +26,8 @@
   .seg button { font: inherit; font-size: 13px; font-weight: var(--ed-fw-medium); color: var(--ed-text-secondary); background: transparent; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; transition: background 140ms ease, color 140ms ease; }
   .seg button:hover { color: var(--ed-text); }
   .seg button.on { background: var(--ed-surface-2); color: var(--ed-text-contrast); }
+  .seg button:disabled { opacity: 0.4; cursor: default; }
+  .seg button:disabled:hover { color: var(--ed-text-secondary); }
   .seg-scn { margin-top: 16px; }
 
   .legend { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin: 26px 0 18px; }
@@ -34,6 +36,7 @@
   .leg.off { opacity: 0.35; }
   .leg .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
   .leg .leg-ed { font-weight: var(--ed-fw-semibold); color: var(--ed-text-contrast); }
+  .leg .leg-ver { font-family: var(--ed-font-mono); font-size: 10.5px; color: var(--ed-text-secondary); margin-left: 2px; }
   .headline { margin-left: auto; display: flex; align-items: center; gap: 12px; padding: 8px 14px; border: 1px solid var(--ed-border-1); border-radius: var(--ed-radius-lg); background: var(--ed-surface-0); }
   .hl-num { font-size: 26px; font-weight: var(--ed-fw-bold); letter-spacing: -0.02em; line-height: 1; }
   .hl-txt { font-size: 11px; color: var(--ed-text-secondary); line-height: 1.35; }
@@ -64,6 +67,7 @@
   .tip-s { font-size: 11px; color: var(--ed-text-secondary); margin-top: 1px; }
   .tip-n { font-family: var(--ed-font-mono); font-size: 13px; color: var(--ed-text-contrast); margin-top: 5px; font-weight: 500; }
   .tip-n span { color: var(--ed-text-secondary); font-size: 10px; font-weight: 400; }
+  .tip-ver { font-family: var(--ed-font-mono); font-size: 10.5px; color: var(--ed-text-secondary); margin-top: 4px; }
   .bar:hover { filter: brightness(1.08); }
   .xaxis { display: flex; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--ed-border-1); }
   .xlab { flex: 1; text-align: center; font-size: 13px; font-weight: var(--ed-fw-semibold); color: var(--ed-text); letter-spacing: -0.005em; }
@@ -99,10 +103,6 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-
-<script>
-  window.MARK_SVG = `<svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.66137 24.3826L7.67271 20.9885H2.05152V25H5.30056L5.66137 24.3826Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M11.927 13.814H2.05152V17.7482H9.60594L11.927 13.814Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.9487 7.00005H2.05152V10.9344H13.6287L15.9487 7.00005Z" fill="currentColor"></path><path d="M19.7186 7.00006L9.04436 25H30.3157L19.7186 7.00006ZM19.6925 13.8915L23.9216 21.0656H15.4382L19.6925 13.8915Z" fill="url(#mark_grad)"></path><defs><linearGradient id="mark_grad" x1="14.3483" y1="10.1154" x2="28.2218" y2="12.3583" gradientUnits="userSpaceOnUse"><stop stop-color="#00DA63"></stop><stop offset="1" stop-color="#27A1FF"></stop></linearGradient></defs></svg>`;
-</script>
 
 <script type="text/babel" src="app.jsx"></script>
 </body>
