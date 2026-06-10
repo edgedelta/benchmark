@@ -1,0 +1,42 @@
+{
+  "_comment": "Agent version release history used to backfill historical benchmark runs by date (latest GA release on or before each run date). Sources: Edge Delta https://docs.edgedelta.com/release-notes/ ; Cribl https://docs.cribl.io/edge/release-notes ; Bindplane https://github.com/observIQ/bindplane-otel-collector/releases ; OTel https://github.com/open-telemetry/opentelemetry-collector-releases . GA dates are release/publish dates.",
+  "ed": [
+    { "version": "v2.11.0", "date": "2026-01-05" },
+    { "version": "v2.12.0", "date": "2026-02-03" },
+    { "version": "v2.13.0", "date": "2026-03-10" },
+    { "version": "v2.14.0", "date": "2026-04-02" },
+    { "version": "v2.15.0", "date": "2026-04-16" },
+    { "version": "v2.16.0", "date": "2026-05-05" },
+    { "version": "v2.17.0", "date": "2026-05-15" },
+    { "version": "v2.18.0", "date": "2026-05-26" }
+  ],
+  "bp": [
+    { "version": "v1.94.2", "date": "2026-02-24" },
+    { "version": "v1.95.0", "date": "2026-03-11" },
+    { "version": "v1.96.0", "date": "2026-03-27" },
+    { "version": "v1.97.0", "date": "2026-04-10" },
+    { "version": "v1.98.0", "date": "2026-04-22" },
+    { "version": "v1.99.0", "date": "2026-05-08" },
+    { "version": "v1.100.0", "date": "2026-05-26" },
+    { "version": "v1.101.0", "date": "2026-06-02" },
+    { "version": "v1.101.1", "date": "2026-06-04" }
+  ],
+  "otel": [
+    { "version": "v0.147.0", "date": "2026-03-02" },
+    { "version": "v0.148.0", "date": "2026-03-20" },
+    { "version": "v0.149.0", "date": "2026-03-31" },
+    { "version": "v0.150.1", "date": "2026-04-13" },
+    { "version": "v0.151.0", "date": "2026-04-29" },
+    { "version": "v0.152.0", "date": "2026-05-12" },
+    { "version": "v0.152.1", "date": "2026-05-20" },
+    { "version": "v0.153.0", "date": "2026-05-26" },
+    { "version": "v0.154.0", "date": "2026-06-09" }
+  ],
+  "cribl": [
+    { "version": "4.16.0", "date": "2026-01-28" },
+    { "version": "4.17.0", "date": "2026-03-11" },
+    { "version": "4.17.1", "date": "2026-04-22" },
+    { "version": "4.18.0", "date": "2026-05-20" },
+    { "version": "4.18.1", "date": "2026-05-21" }
+  ]
+}
