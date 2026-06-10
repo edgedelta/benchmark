@@ -42,3 +42,6 @@ aws_resources/benchmark_s3_user_credentials.txt
 
 # temporary folder
 temp/
+
+# local-dev only; real history lives on gh-pages
+site/data/

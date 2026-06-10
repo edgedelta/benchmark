@@ -60,7 +60,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.20.0
         with:
-          artifacts: benchmark_results/*/*.log
+          artifacts: "benchmark_results/*/*.log,benchmark_results/data.json"
           bodyFile: benchmark_results/report.md
           tag: ${{ steps.tag.outputs.value }}
           name: "Benchmark Report - ${{ steps.tag.outputs.value }}"

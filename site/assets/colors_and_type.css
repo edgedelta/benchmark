@@ -1,0 +1,366 @@
+/* Edge Delta Design System — Core Tokens
+ * All resolved hex values from design-tokens.md
+ * Toggle theme via [data-theme="dark"] on :root
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ─── Extended Palette — Gray ─── */
+  --ed-gray-white: #FFFFFF;
+  --ed-gray-25: #F8F8F8;
+  --ed-gray-50: #F3F3F3;
+  --ed-gray-75: #EDEDED;
+  --ed-gray-100: #E6E6E6;
+  --ed-gray-200: #CCCCCC;
+  --ed-gray-300: #B4B4B4;
+  --ed-gray-400: #9B9B9B;
+  --ed-gray-500: #848484;
+  --ed-gray-600: #6F6F6F;
+  --ed-gray-700: #585858;
+  --ed-gray-800: #444444;
+  --ed-gray-900: #303030;
+  --ed-gray-1000: #1D1D1D;
+  --ed-gray-1050: #151515;
+  --ed-gray-1100: #0C0C0C;
+  --ed-gray-1200: #010101;
+  --ed-gray-black: #000000;
+
+  /* ─── Azure (interactive) ─── */
+  --ed-azure-25: #F1FAFF;
+  --ed-azure-50: #E8F5FF;
+  --ed-azure-75: #DFEFFF;
+  --ed-azure-100: #D7E9FA;
+  --ed-azure-125: #CAE3FB;
+  --ed-azure-200: #A6D1FB;
+  --ed-azure-300: #71BBFF;
+  --ed-azure-400: #27A1FF;
+  --ed-azure-500: #0089E1;
+  --ed-azure-600: #0072BE;
+  --ed-azure-700: #015B98;
+  --ed-azure-800: #004677;
+  --ed-azure-900: #003258;
+  --ed-azure-1000: #001E38;
+
+  /* ─── Scarlet (error) ─── */
+  --ed-scarlet-25: #FFF5F3;
+  --ed-scarlet-50: #FFEEEB;
+  --ed-scarlet-75: #FFE7E2;
+  --ed-scarlet-100: #FADFDA;
+  --ed-scarlet-200: #FBBAAF;
+  --ed-scarlet-400: #FE5F4D;
+  --ed-scarlet-500: #F60F06;
+  --ed-scarlet-600: #CF0A04;
+  --ed-scarlet-700: #A70602;
+  --ed-scarlet-800: #830402;
+
+  /* ─── Gold (warning) ─── */
+  --ed-gold-25: #FFF9CE;
+  --ed-gold-50: #FFF4B5;
+  --ed-gold-100: #FDE68F;
+  --ed-gold-200: #F1C900;
+  --ed-gold-300: #D7B100;
+  --ed-gold-400: #BA9900;
+  --ed-gold-600: #856D00;
+  --ed-gold-700: #6A5600;
+  --ed-gold-800: #524200;
+
+  /* ─── Green (success; 300 = Edge Green brand accent) ─── */
+  --ed-green-25: #EFFDF1;
+  --ed-green-75: #CBFBD3;
+  --ed-green-100: #B2FBBF;
+  --ed-green-300: #00DA63;
+  --ed-green-400: #00BB53;
+  --ed-green-500: #00A046;
+  --ed-green-600: #008639;
+  --ed-green-700: #006B2C;
+  --ed-green-800: #005321;
+
+  /* ─── Blue ─── */
+  --ed-blue-75: #E4EDFF;
+  --ed-blue-100: #DCE7FA;
+  --ed-blue-500: #3F7AFF;
+  --ed-blue-600: #1358FF;
+  --ed-blue-700: #003EDB;
+  --ed-blue-800: #002FAD;
+
+  /* ─── Orange ─── */
+  --ed-orange-25: #FFF6EE;
+  --ed-orange-50: #FFEFE5;
+  --ed-orange-200: #FCBC98;
+  --ed-orange-300: #FF9554;
+  --ed-orange-400: #EF7300;
+  --ed-orange-500: #CE6101;
+  --ed-orange-600: #AD5000;
+  --ed-orange-700: #8B3F01;
+
+  /* ─── Rose ─── */
+  --ed-rose-25: #FFF4F8;
+  --ed-rose-300: #FF8AAD;
+  --ed-rose-400: #FF5091;
+  --ed-rose-500: #EF0179;
+  --ed-rose-600: #C90065;
+  --ed-rose-700: #A20050;
+
+  /* ─── Violet ─── */
+  --ed-violet-75: #F0E9FF;
+  --ed-violet-300: #C29FFF;
+  --ed-violet-500: #9F4FFF;
+  --ed-violet-600: #8E00F8;
+  --ed-violet-700: #7200C8;
+
+  /* ─── Indigo / Cyan / Vermilion ─── */
+  --ed-indigo-600: #5E42FF;
+  --ed-cyan-400: #00B3B2;
+  --ed-cyan-600: #008585;
+  --ed-vermilion-400: #FF5F3C;
+  --ed-vermilion-600: #C62D00;
+
+  /* ═══ FUNCTIONAL TOKENS — LIGHT MODE ═══ */
+
+  /* Structure */
+  --ed-nav-bg: #F8F8F8;
+  --ed-surface-0: #F3F3F3;
+  --ed-surface-1: #F8F8F8;
+  --ed-surface-2: #FFFFFF;
+  --ed-surface-3: #FFFFFF;
+  --ed-border-1: #EDEDED;
+  --ed-border-2: #EDEDED;
+  --ed-border-3: #EDEDED;
+  --ed-stroke-1: #E6E6E6;
+  --ed-stroke-2: #EDEDED;
+  --ed-modal-shade: #000000A3;
+
+  /* Text */
+  --ed-text: #1D1D1D;
+  --ed-text-secondary: #6F6F6F;
+  --ed-text-disabled: #9B9B9B;
+  --ed-text-error: #CF0A04;
+  --ed-text-link: #0072BE;
+  --ed-text-link-hover: #015B98;
+  --ed-text-highlight: #3F7AFF;
+  --ed-text-contrast: #000000;
+
+  /* Semantic accents */
+  --ed-accent-red: #F60F06;
+  --ed-accent-blue: #1358FF;
+  --ed-accent-yellow: #F1C900;
+  --ed-accent-green: #00BB53;
+  --ed-brand-green: #00DA63;
+
+  /* Interactive (Azure) */
+  --ed-interactive: #0072BE;
+  --ed-interactive-hover: #015B98;
+  --ed-interactive-subtle: #E8F5FF;
+  --ed-interactive-subtle-hover: #D7E9FA;
+
+  /* Button — achromatic only */
+  --ed-btn-primary-bg: #1D1D1D;
+  --ed-btn-primary-bg-hover: #303030;
+  --ed-btn-primary-bg-pressed: #1D1D1D;
+  --ed-btn-primary-text: #FFFFFF;
+  --ed-btn-secondary-bg: #E6E6E6;
+  --ed-btn-secondary-bg-hover: #CCCCCC;
+  --ed-btn-secondary-text: #1D1D1D;
+  --ed-btn-ghost-bg-hover: #F3F3F3;
+  --ed-btn-disabled-bg: #E6E6E6;
+  --ed-btn-disabled-text: #9B9B9B;
+
+  /* Input */
+  --ed-input-border: #B4B4B4;
+  --ed-input-border-focus: #0089E1;
+  --ed-input-hint: #848484;
+
+  /* Badge */
+  --ed-badge-bg: #E6E6E6;
+  --ed-badge-prominent-bg: #CF0A04;
+  --ed-badge-prominent-text: #FFFFFF;
+
+  /* Table */
+  --ed-table-hover: #E8F5FF;
+  --ed-table-selected: #D7E9FA;
+  --ed-table-hover-neutral: #F3F3F3;
+  --ed-table-selected-neutral: #E6E6E6;
+
+  /* Chart (categorical) */
+  --ed-chart-1: #015B98;
+  --ed-chart-2: #FF5091;
+  --ed-chart-3: #F1C900;
+  --ed-chart-4: #005321;
+  --ed-chart-5: #FF9554;
+  --ed-chart-6: #9F4FFF;
+  --ed-chart-other: #9B9B9B;
+
+  /* Zones */
+  --ed-zone-red-bg: #FADFDA;
+  --ed-zone-red-border: #CF0A04;
+  --ed-zone-yellow-bg: #FFF4B5;
+  --ed-zone-yellow-border: #BA9900;
+
+  /* Code */
+  --ed-code-bg: #F9F8F5;
+  --ed-code-text: #414251;
+  --ed-code-comment: #999AA6;
+  --ed-code-keyword: #7200C8;
+  --ed-code-string: #00A046;
+  --ed-code-function: #0089E1;
+  --ed-code-type: #00B3B2;
+
+  /* Avatars */
+  --ed-avatar-green: #008639;
+  --ed-avatar-gold: #856D00;
+  --ed-avatar-orange: #AD5000;
+  --ed-avatar-vermilion: #C62D00;
+  --ed-avatar-scarlet: #CF0A04;
+  --ed-avatar-rose: #C90065;
+  --ed-avatar-violet: #8E00F8;
+  --ed-avatar-indigo: #5E42FF;
+  --ed-avatar-blue: #1358FF;
+  --ed-avatar-azure: #0072BE;
+  --ed-avatar-cyan: #008585;
+  --ed-avatar-gray: #6F6F6F;
+
+  /* Shape */
+  --ed-radius-sm: 4px;
+  --ed-radius-md: 6px;
+  --ed-radius-lg: 8px;
+  --ed-radius-xl: 12px;
+
+  /* Spacing (4px base) */
+  --ed-space-1: 4px;
+  --ed-space-2: 8px;
+  --ed-space-3: 12px;
+  --ed-space-4: 16px;
+  --ed-space-5: 20px;
+  --ed-space-6: 24px;
+  --ed-space-8: 32px;
+
+  /* Elevation */
+  --ed-shadow-popover: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --ed-shadow-modal: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --ed-shadow-none: none;
+
+  /* Type */
+  --ed-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ed-font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Type scale */
+  --ed-fs-display: 24px;
+  --ed-fs-h1: 20px;
+  --ed-fs-h2: 18px;
+  --ed-fs-h3: 16px;
+  --ed-fs-body: 14px;
+  --ed-fs-body-sm: 13px;
+  --ed-fs-secondary: 12px;
+  --ed-fs-label: 11px;
+
+  --ed-fw-regular: 400;
+  --ed-fw-medium: 500;
+  --ed-fw-semibold: 600;
+  --ed-fw-bold: 700;
+
+  --ed-lh-tight: 1.2;
+  --ed-lh-body: 1.45;
+  --ed-lh-loose: 1.6;
+}
+
+[data-theme="dark"] {
+  --ed-nav-bg: #1D1D1D;
+  --ed-surface-0: #0C0C0C;
+  --ed-surface-1: #1D1D1D;
+  --ed-surface-2: #303030;
+  --ed-surface-3: #444444;
+  --ed-border-1: #303030;
+  --ed-border-2: #444444;
+  --ed-border-3: #585858;
+  --ed-stroke-1: #444444;
+  --ed-stroke-2: #585858;
+  --ed-modal-shade: #00000066;
+
+  --ed-text: #E6E6E6;
+  --ed-text-secondary: #9B9B9B;
+  --ed-text-disabled: #9B9B9B;
+  --ed-text-error: #F60F06;
+  --ed-text-link: #71BBFF;
+  --ed-text-link-hover: #A6D1FB;
+  --ed-text-contrast: #FFFFFF;
+
+  --ed-interactive-subtle: #003258;
+  --ed-interactive-subtle-hover: #004677;
+
+  --ed-btn-primary-bg: #E6E6E6;
+  --ed-btn-primary-bg-hover: #CCCCCC;
+  --ed-btn-primary-text: #1D1D1D;
+  --ed-btn-secondary-bg: #444444;
+  --ed-btn-secondary-bg-hover: #585858;
+  --ed-btn-secondary-text: #E6E6E6;
+  --ed-btn-ghost-bg-hover: #303030;
+
+  --ed-table-hover: #003258;
+  --ed-table-selected: #004677;
+  --ed-table-hover-neutral: #303030;
+  --ed-table-selected-neutral: #444444;
+
+  --ed-badge-bg: #585858;
+  --ed-input-border: #585858;
+
+  --ed-popover-bg: #1D1D1D;
+  --ed-popover-border: #303030;
+
+  --ed-code-bg: #1D1D1D;
+  --ed-code-text: #E6E6E6;
+}
+
+/* ═══ Semantic element defaults ═══ */
+html, body {
+  font-family: var(--ed-font);
+  color: var(--ed-text);
+  background: var(--ed-surface-0);
+  font-size: var(--ed-fs-body);
+  line-height: var(--ed-lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, .ed-h1 {
+  font-size: var(--ed-fs-display);
+  font-weight: var(--ed-fw-semibold);
+  line-height: var(--ed-lh-tight);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+h2, .ed-h2 {
+  font-size: var(--ed-fs-h1);
+  font-weight: var(--ed-fw-semibold);
+  line-height: var(--ed-lh-tight);
+  margin: 0;
+}
+h3, .ed-h3 {
+  font-size: var(--ed-fs-h2);
+  font-weight: var(--ed-fw-medium);
+  line-height: var(--ed-lh-tight);
+  margin: 0;
+}
+p, .ed-body {
+  font-size: var(--ed-fs-body);
+  font-weight: var(--ed-fw-regular);
+  line-height: var(--ed-lh-body);
+  margin: 0;
+}
+small, .ed-secondary {
+  font-size: var(--ed-fs-secondary);
+  color: var(--ed-text-secondary);
+}
+code, kbd, .ed-mono {
+  font-family: var(--ed-font-mono);
+  font-size: var(--ed-fs-body-sm);
+}
+.ed-label {
+  font-size: var(--ed-fs-label);
+  font-weight: var(--ed-fw-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ed-text-secondary);
+}
+a { color: var(--ed-text-link); text-decoration: none; }
+a:hover { color: var(--ed-text-link-hover); text-decoration: underline; }

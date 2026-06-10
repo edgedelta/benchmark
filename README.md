@@ -6,6 +6,8 @@ Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **
 
 📊 **[View Latest Benchmark Report](https://github.com/edgedelta/benchmark/releases/latest)**
 
+📈 **[Interactive Benchmark Charts](https://edgedelta.github.io/benchmark/)** — throughput, efficiency, and historical trend across vendors.
+
 ## Purpose
 
 This repository helps developers evaluate and compare HTTP input throughput for four observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
