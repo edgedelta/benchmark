@@ -167,7 +167,9 @@ function generate_versions_csv() {
   local ed_version bindplane_version cribl_version otelcol_version
   ed_version=$(ssh "${ssh_args[@]}" "/opt/edgedelta/agent/edgedelta --version 2>/dev/null | cut -d ',' -f 1 | sed 's/Agent version: //' || echo unknown" 2>/dev/null || echo "unknown")
   bindplane_version=$(ssh "${ssh_args[@]}" "/opt/observiq-otel-collector/observiq-otel-collector --version 2>/dev/null | head -1 | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
-  cribl_version=$(ssh "${ssh_args[@]}" "/opt/cribl/bin/cribl --version 2>/dev/null | head -1 || echo unknown" 2>/dev/null || echo "unknown")
+  # `cribl version` (subcommand) prints the Cribl product version; `cribl --version`
+  # falls through to the bundled Node.js runtime (e.g. v22.x). Extract the X.Y.Z product version.
+  cribl_version=$(ssh "${ssh_args[@]}" "/opt/cribl/bin/cribl version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo unknown" 2>/dev/null || echo "unknown")
   otelcol_version=$(ssh "${ssh_args[@]}" "otelcol-contrib --version 2>/dev/null | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
 
   {
