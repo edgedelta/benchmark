@@ -60,6 +60,10 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.20.0
         with:
+          # Use the GitHub App token (not the default GITHUB_TOKEN) so the resulting
+          # `release: published` event triggers the publish-pages workflow. Releases
+          # created with GITHUB_TOKEN do not trigger other workflows (GitHub anti-recursion).
+          token: ${{ steps.app-token.outputs.token }}
           artifacts: "benchmark_results/*/*.log,benchmark_results/data.json"
           bodyFile: benchmark_results/report.md
           tag: ${{ steps.tag.outputs.value }}
