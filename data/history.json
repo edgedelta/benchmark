@@ -8,7 +8,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.13.0",
+      "bp": "v1.95.0",
+      "otel": "v0.147.0",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -93,7 +98,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.13.0",
+      "bp": "v1.95.0",
+      "otel": "v0.147.0",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -178,7 +188,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.13.0",
+      "bp": "v1.95.0",
+      "otel": "v0.148.0",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -263,7 +278,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.13.0",
+      "bp": "v1.96.0",
+      "otel": "v0.148.0",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -348,7 +368,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.14.0",
+      "bp": "v1.96.0",
+      "otel": "v0.149.0",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -433,7 +458,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.14.0",
+      "bp": "v1.97.0",
+      "otel": "v0.150.1",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -518,7 +548,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.15.0",
+      "bp": "v1.97.0",
+      "otel": "v0.150.1",
+      "cribl": "4.17.0"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -603,7 +638,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.15.0",
+      "bp": "v1.98.0",
+      "otel": "v0.151.0",
+      "cribl": "4.17.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -688,7 +728,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.16.0",
+      "bp": "v1.99.0",
+      "otel": "v0.151.0",
+      "cribl": "4.17.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -773,7 +818,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.17.0",
+      "bp": "v1.99.0",
+      "otel": "v0.152.0",
+      "cribl": "4.17.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -858,7 +908,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.17.0",
+      "bp": "v1.99.0",
+      "otel": "v0.152.1",
+      "cribl": "4.18.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -943,7 +998,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.18.0",
+      "bp": "v1.100.0",
+      "otel": "v0.153.0",
+      "cribl": "4.18.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -1028,7 +1088,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.18.0",
+      "bp": "v1.101.0",
+      "otel": "v0.153.0",
+      "cribl": "4.18.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
@@ -1113,7 +1178,12 @@
       "Mask",
       "Lookup"
     ],
-    "versions": {},
+    "versions": {
+      "ed": "v2.18.0",
+      "bp": "v1.101.1",
+      "otel": "v0.153.0",
+      "cribl": "4.18.1"
+    },
     "vendors": {
       "ed": {
         "name": "Edge Delta",
