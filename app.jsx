@@ -130,15 +130,21 @@ function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }
   const plotW = W - padL - padR, plotH = H - padT - padB;
   const n = history.length;
 
-  const series = VENDORS.map((v) => ({
-    v,
-    pts: history.map((r, i) => {
-      const vd = r.vendors && r.vendors[v.key];
-      const arr = vd ? vd[metric] : null;
-      const val = arr && arr[scenarioIndex] != null ? arr[scenarioIndex] : null;
-      return { i, val, date: r.date };
-    }),
-  }));
+  const series = VENDORS.map((v) => {
+    let prevVer = null;
+    return {
+      v,
+      pts: history.map((r, i) => {
+        const vd = r.vendors && r.vendors[v.key];
+        const arr = vd ? vd[metric] : null;
+        const val = arr && arr[scenarioIndex] != null ? arr[scenarioIndex] : null;
+        const ver = r.versions && r.versions[v.key] != null ? r.versions[v.key] : null;
+        const changed = ver != null && prevVer != null && ver !== prevVer;
+        if (ver != null) prevVer = ver;
+        return { i, val, date: r.date, ver, changed };
+      }),
+    };
+  });
 
   const vals = [];
   series.forEach((s) => { if (visible.has(s.v.key)) s.pts.forEach((p) => { if (p.val != null) vals.push(p.val); }); });
@@ -175,12 +181,22 @@ function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }
                 <polyline key={k} fill="none" stroke={vendorColor(s.v.key)} strokeWidth={isEd ? 2.6 : 1.6}
                   strokeLinejoin="round" strokeLinecap="round" points={seg.map((p) => `${X(p.i)},${Y(p.val)}`).join(" ")} />
               ))}
-              {s.pts.map((p) => p.val == null ? null : (
-                <circle key={p.i} cx={X(p.i)} cy={Y(p.val)} r={isEd ? 3.6 : 3} fill="var(--ed-surface-1)"
-                  stroke={vendorColor(s.v.key)} strokeWidth="2" style={{ cursor: "pointer" }}
-                  onMouseEnter={() => setHover({ key: s.v.key, name: s.v.name, val: p.val, date: p.date, x: X(p.i), y: Y(p.val) })}
-                  onMouseLeave={() => setHover(null)} />
-              ))}
+              {s.pts.map((p) => {
+                if (p.val == null) return null;
+                const cx = X(p.i), cy = Y(p.val);
+                const handlers = {
+                  style: { cursor: "pointer" },
+                  onMouseEnter: () => setHover({ key: s.v.key, name: s.v.name, val: p.val, date: p.date, ver: p.ver, changed: p.changed, x: cx, y: cy }),
+                  onMouseLeave: () => setHover(null),
+                };
+                if (p.changed) {
+                  const d = isEd ? 5 : 4.4;
+                  return <path key={p.i} d={`M ${cx} ${cy - d} L ${cx + d} ${cy} L ${cx} ${cy + d} L ${cx - d} ${cy} Z`}
+                    fill="var(--ed-surface-1)" stroke={vendorColor(s.v.key)} strokeWidth="2" {...handlers} />;
+                }
+                return <circle key={p.i} cx={cx} cy={cy} r={isEd ? 3.6 : 3} fill="var(--ed-surface-1)"
+                  stroke={vendorColor(s.v.key)} strokeWidth="2" {...handlers} />;
+              })}
             </g>
           );
         })}
@@ -190,6 +206,7 @@ function TrendChart({ history, scenarioIndex, metric, visible, hover, setHover }
           <div className="tip-v" style={{ color: vendorColor(hover.key) }}>{hover.name}</div>
           <div className="tip-s">{SCENARIOS[scenarioIndex]} · {hover.date}</div>
           <div className="tip-n">{fmt(hover.val)} <span>logs/sec</span></div>
+          {hover.ver != null && <div className="tip-ver">{hover.changed ? "◆ updated to " : "version "}{hover.ver}</div>}
         </div>
       )}
     </div>
@@ -233,16 +250,6 @@ function App() {
 
   const visible = new Set(VENDORS.map((v) => v.key).filter((k) => !hidden.has(k)));
 
-  let lead = { ratio: 0, sc: "" };
-  SCENARIOS.forEach((s, i) => {
-    const ed = data.ed[i];
-    if (ed == null) return;
-    const others = VENDORS.slice(1).map((v) => data[v.key][i]).filter((x) => x != null);
-    if (!others.length) return;
-    const r = ed / Math.max(...others);
-    if (r > lead.ratio) lead = { ratio: r, sc: s };
-  });
-
   const toggle = (k) => {
     if (view !== "trend") return;
     setHidden((prev) => { const n = new Set(prev); n.has(k) ? n.delete(k) : n.add(k); return n; });
@@ -253,7 +260,6 @@ function App() {
       <div className="card">
         <header className="head">
           <div className="brand">
-            <span className="mark" dangerouslySetInnerHTML={{ __html: MARK_SVG }} />
             <div className="titles">
               <h1>Pipeline throughput benchmark</h1>
               <p className="sub">
@@ -269,12 +275,10 @@ function App() {
               <button className={view === "efficiency" ? "on" : ""} onClick={() => { setView("efficiency"); setHover(null); }}>Efficiency</button>
               <button className={view === "trend" ? "on" : ""} onClick={() => setView("trend")}>Trend</button>
             </div>
-            {(view === "throughput" || view === "trend") && (
-              <div className="seg">
-                <button className={metric === "avg" ? "on" : ""} onClick={() => setMetric("avg")}>Average</button>
-                <button className={metric === "peak" ? "on" : ""} onClick={() => setMetric("peak")}>Peak</button>
-              </div>
-            )}
+            <div className="seg">
+              <button className={metric === "avg" ? "on" : ""} disabled={view === "efficiency"} onClick={() => setMetric("avg")}>Average</button>
+              <button className={metric === "peak" ? "on" : ""} disabled={view === "efficiency"} onClick={() => setMetric("peak")}>Peak</button>
+            </div>
           </div>
         </header>
 
@@ -293,15 +297,10 @@ function App() {
               <div className={"leg" + (view === "trend" ? " leg-click" : "") + (off ? " off" : "")} key={v.key} onClick={() => toggle(v.key)}>
                 <span className="sw" style={{ background: vendorColor(v.key) }} />
                 <span className={v.key === "ed" ? "leg-ed" : ""}>{v.name}</span>
+                {latest.versions?.[v.key] && <span className="leg-ver">{latest.versions[v.key]}</span>}
               </div>
             );
           })}
-          {view === "throughput" && lead.ratio > 0 && (
-            <div className="headline">
-              <span className="hl-num" style={{ color: PALETTE.ed }}>{lead.ratio.toFixed(1)}×</span>
-              <span className="hl-txt">Edge Delta&rsquo;s lead in {lead.sc}<br />vs. the next-best vendor</span>
-            </div>
-          )}
         </div>
 
         <div className="viewbody">
@@ -312,7 +311,7 @@ function App() {
 
         <footer className="foot">
           <span>{latest.date} · run {latest.runId}{view === "trend" ? " · " + history.length + " runs" : ""}</span>
-          <span className="na-key">N/A = scenario not supported by that vendor</span>
+          <span className="na-key">{view === "trend" ? "◆ = agent version change · " : ""}N/A = scenario not supported by that vendor</span>
         </footer>
       </div>
     </div>
