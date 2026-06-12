@@ -33,7 +33,7 @@ processors:
       - '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
     summary: silent
   probabilistic_sampler:
-    sampling_percentage: 95
+    sampling_percentage: 5
     attribute_source: record
     from_attribute: sampling.key
   batch:

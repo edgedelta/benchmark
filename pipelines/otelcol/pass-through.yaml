@@ -7,7 +7,7 @@ receivers:
 
 processors:
   # Synthetic logs carry no trace ID, so derive a hashable key for the
-  # destination sampler to keep ~95% like the other vendors.
+  # destination sampler to keep ~5% like the other vendors.
   transform:
     error_mode: ignore
     log_statements:
@@ -15,7 +15,7 @@ processors:
         statements:
           - set(attributes["sampling.key"], SHA256(body)) where IsString(body)
   probabilistic_sampler:
-    sampling_percentage: 95
+    sampling_percentage: 5
     attribute_source: record
     from_attribute: sampling.key
   batch:
