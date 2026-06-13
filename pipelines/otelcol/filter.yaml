@@ -21,7 +21,7 @@ processors:
       log_record:
         - 'attributes["color"] == "Green"'
   probabilistic_sampler:
-    sampling_percentage: 95
+    sampling_percentage: 5
     attribute_source: record
     from_attribute: ipv4
   batch:

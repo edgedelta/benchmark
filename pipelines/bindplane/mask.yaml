@@ -109,7 +109,7 @@ spec:
                 - name: condition
                   value: ""
                 - name: drop_ratio
-                  value: "0.05"
+                  value: "0.95"
             - id: 01KFXJ2EZN1HAT4M2BNT9TFPHY
               displayName: Batch for AWS S3
               type: batch
