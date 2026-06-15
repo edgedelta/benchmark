@@ -1,6 +1,10 @@
 #!/bin/bash
 
 set -e
+# pipefail: without it, `run_benchmark.sh | tee` returns tee's (0) exit
+# status, so a failed/crashed agent run was reported as "completed
+# successfully". pipefail makes the pipeline surface run_benchmark.sh's failure.
+set -o pipefail
 
 # App identifiers: edgedelta (Edge Delta), bindplane (Bindplane), cribl (Cribl), otelcol (OpenTelemetry Collector)
 app=$1
