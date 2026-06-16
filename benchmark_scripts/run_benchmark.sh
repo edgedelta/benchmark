@@ -31,6 +31,23 @@ cleanup() {
 }
 trap cleanup EXIT ERR
 
+# On agent failure, dump diagnostics to stdout. The benchmark instance is torn
+# down (terraform destroy) before result artifacts are uploaded, so evidence
+# must be emitted inline here — this SSH stdout streams back to the CI console.
+capture_diagnostics() {
+  echo "===== DIAGNOSTICS: $service ====="
+  sudo systemctl status "$service" --no-pager -l 2>&1 | head -n 20 || true
+  echo "----- journalctl -u $service (last 200 lines) -----"
+  sudo journalctl -u "$service" --no-pager -n 200 2>&1 || true
+  if [[ "$app" == "cribl" ]]; then
+    echo "----- /opt/cribl/log/cribl.log (last 100 lines) -----"
+    sudo tail -n 100 /opt/cribl/log/cribl.log 2>&1 || true
+    echo "----- cribl worker logs (last 100 lines) -----"
+    sudo tail -n 100 /opt/cribl/log/worker/*/cribl.log 2>&1 || true
+  fi
+  echo "===== END DIAGNOSTICS ====="
+}
+
 # Start service
 echo "Starting $service..."
 if ! sudo systemctl start "$service"; then
@@ -38,24 +55,43 @@ if ! sudo systemctl start "$service"; then
   exit 1
 fi
 
-# Wait for service port to be ready (up to 3 minutes)
-echo "Waiting for port $port to be listening (up to 3m)..."
+# Wait for the service to be STABLY ready before generating load.
+#
+# Cribl edge bounces once during early startup (~20s after start): it logs
+# "stale pid file" -> systemd "Scheduled restart". A plain "port is listening"
+# check passes during the first up-window, so load would start and then the
+# bounce kills it mid-run (connection reset -> refused). A transient-inactive
+# check also mis-fires, reading the bounce as a crash.
+#
+# So require the service to be active AND the port listening *continuously* for
+# STABILITY_SECS. Any blip (the bounce) resets the counter, so we only proceed
+# once startup has truly settled. Harmless for agents that come up clean — they
+# just satisfy the window immediately.
+STABILITY_SECS=30
+OVERALL_TIMEOUT=300
+echo "Waiting for $service to be stably ready (port $port up + active for ${STABILITY_SECS}s, timeout ${OVERALL_TIMEOUT}s)..."
 port_ready=false
-for ((i=0; i<180; i++)); do
-  if nc -z localhost "$port" 2>/dev/null; then
-    echo "Port $port is listening on localhost (after ${i}s)"
-    port_ready=true
-    break
-  fi
-  if ! sudo systemctl is-active --quiet "$service"; then
-    echo "Service $service stopped unexpectedly while waiting for port"
-    exit 1
+stable=0
+for ((i=0; i<OVERALL_TIMEOUT; i++)); do
+  if sudo systemctl is-active --quiet "$service" && nc -z localhost "$port" 2>/dev/null; then
+    stable=$((stable + 1))
+    if (( stable >= STABILITY_SECS )); then
+      echo "$service stably ready (port $port up + active for ${STABILITY_SECS}s, after ${i}s)"
+      port_ready=true
+      break
+    fi
+  else
+    if (( stable > 0 )); then
+      echo "Service/port not ready at ${i}s — resetting stability counter (service likely restarting)"
+    fi
+    stable=0
   fi
   sleep 1
 done
 
 if [[ "$port_ready" != true ]]; then
-  echo "Port $port did not start listening on localhost within 3 minutes"
+  echo "$service did not reach a stable ready state within ${OVERALL_TIMEOUT}s"
+  capture_diagnostics
   exit 1
 fi
 
@@ -125,6 +161,15 @@ for i in 80 100 120; do
   fi
 
   echo "Finished loadgen with ${i} workers for $app"
+
+  # loadgen exits 0 even when every send fails (it only logs the errors), so a
+  # mid-run agent crash would otherwise be reported as a successful run with
+  # garbage data. Assert the agent is still alive and fail loudly if not.
+  if ! sudo systemctl is-active --quiet "$service"; then
+    echo "ERROR: $service is not active after the ${i}-worker run — agent died mid-benchmark"
+    capture_diagnostics
+    exit 1
+  fi
 
   # Wait for 60 seconds before starting next iteration
   sleep 60
