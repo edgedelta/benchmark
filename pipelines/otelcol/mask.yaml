@@ -15,12 +15,8 @@ processors:
           - set(body, ParseJSON(body)) where not IsMap(body) and true
           - set(cache["copy_field"], body["pii"]) where body["pii"] != nil
           - merge_maps(attributes, cache["copy_field"], "upsert") where cache["copy_field"] != nil
-          - set(attributes["sampling.key"], SHA256(attributes["ipv4"])) where attributes["ipv4"] != nil
   redaction:
     allow_all_keys: true
-    # Exempt the SHA256 sampling key so redaction does not mask it.
-    allowed_values:
-      - '^[a-f0-9]{64}$'
     blocked_values:
       - '((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}'
       - '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
@@ -32,10 +28,6 @@ processors:
       - '(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
       - '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
     summary: silent
-  probabilistic_sampler:
-    sampling_percentage: 5
-    attribute_source: record
-    from_attribute: sampling.key
   batch:
     send_batch_size: 8192
     send_batch_max_size: 8192
@@ -56,5 +48,5 @@ service:
   pipelines:
     logs:
       receivers: [webhookevent]
-      processors: [transform, redaction, probabilistic_sampler, batch]
+      processors: [transform, redaction, batch]
       exporters: [awss3]

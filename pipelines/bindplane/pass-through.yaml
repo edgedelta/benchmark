@@ -35,14 +35,6 @@ spec:
         - id: 01KFXCH53W5CFVQZFHF6RVV2TF
           name: s3_dest
           processors:
-            - id: 01KFXCJG1BY6WDZKHJ5MR1KYF4
-              displayName: sample
-              type: sampling
-              parameters:
-                - name: condition
-                  value: ""
-                - name: drop_ratio
-                  value: "0.95"
             - id: 01KFXJ2EZN1HAT4M2BNT9TFPHY
               displayName: Batch for AWS S3
               type: batch

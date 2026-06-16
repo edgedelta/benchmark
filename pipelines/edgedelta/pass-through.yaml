@@ -155,10 +155,4 @@ nodes:
 - name: s3_output_b7e2_multiprocessor
   type: sequence
   user_description: Multi Processor
-  processors:
-  - type: sample
-    metadata: '{"id":"KCWmAQXzTcCju6XRtiSBA","type":"sample","name":"Sample"}'
-    data_types:
-    - log
-    percentage: 5
-    pass_through_on_failure: true
+  processors: []

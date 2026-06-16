@@ -20,10 +20,6 @@ processors:
     logs:
       log_record:
         - 'attributes["color"] == "Green"'
-  probabilistic_sampler:
-    sampling_percentage: 5
-    attribute_source: record
-    from_attribute: ipv4
   batch:
     send_batch_size: 8192
     send_batch_max_size: 8192
@@ -44,5 +40,5 @@ service:
   pipelines:
     logs:
       receivers: [webhookevent]
-      processors: [transform, filter, probabilistic_sampler, batch]
+      processors: [transform, filter, batch]
       exporters: [awss3]

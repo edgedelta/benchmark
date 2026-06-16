@@ -22,19 +22,6 @@
         "filter": "attributes[\"pii\"][\"color\"] == 'Green'",
         "disabled": false,
         "conf": {}
-      },
-      {
-        "id": "sampling",
-        "filter": "true",
-        "conf": {
-          "rules": [
-            {
-              "filter": "true",
-              "rate": 20
-            }
-          ]
-        },
-        "final": true
       }
     ],
     "groups": {}
