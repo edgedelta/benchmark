@@ -140,7 +140,7 @@ nodes:
   schema: Archive
   compression: zstd
   region: us-west-2
-  parallel_worker_count: 3
+  parallel_worker_count: 5
   bucket: {S3_PLACEHOLDER}
   encoding: json
   disable_metadata_ingestion: false
