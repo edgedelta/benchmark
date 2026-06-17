@@ -35,13 +35,7 @@ nodes:
   enable_agent_stats_metrics: true
 - name: edgedelta_multiprocessor
   type: sequence
-  processors:
-  - type: sample
-    metadata: '{"id":"X8332caR9PyaCLVp7DlZ_","type":"sample","name":"Sample"}'
-    data_types:
-    - log
-    percentage: 1
-    pass_through_on_failure: true
+  processors: []
 - name: edgedelta
   type: ed_output
   user_description: Edge Delta
@@ -138,7 +132,7 @@ nodes:
   schema: Archive
   compression: zstd
   region: us-west-2
-  parallel_worker_count: 5
+  parallel_worker_count: 6
   bucket: {S3_PLACEHOLDER}
   encoding: json
   disable_metadata_ingestion: false
