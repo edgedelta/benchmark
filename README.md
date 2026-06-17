@@ -107,6 +107,32 @@ From the repository root:
 5. **Downloads results** – Saves to `benchmark_results/<YYYYMMDD_HHMMSS>/`
 6. **Cleans up** – Deletes pipelines and runs `terraform destroy`
 
+### Running a subset
+
+By default `./run.sh` runs every case for every vendor. For faster local
+iteration you can restrict the run with two optional flags:
+
+```bash
+# Only the pass-through and mask cases (all vendors):
+./run.sh --cases pass-through,mask
+
+# Only Edge Delta and Cribl (all cases):
+./run.sh --vendors edgedelta,cribl
+
+# Edge Delta, filter case only:
+./run.sh --vendors edgedelta --cases filter
+```
+
+- `--cases` accepts `pass-through`, `filter`, `mask`, `lookup` (`passthrough` is
+  accepted as an alias for `pass-through`). Values may be comma- or
+  space-separated.
+- `--vendors` accepts `edgedelta`, `bindplane`, `cribl`, `otelcol`.
+- Prerequisite checks (env vars, Bindplane CLI) only run for the selected
+  vendors, so you don't need Cribl credentials to run an Edge Delta–only pass.
+- `otelcol` has no `lookup` case; it is skipped automatically if `lookup` is the
+  only selected case.
+- Run `./run.sh --help` for the full usage.
+
 **Note:** Run from the repository root. The script sources `functions.sh` and expects to execute from that directory.
 
 ## Benchmark Types

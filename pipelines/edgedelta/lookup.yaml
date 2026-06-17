@@ -136,12 +136,11 @@ nodes:
   type: s3_output
   user_description: S3 Destination
   schema: Archive
-  compression: gzip
+  compression: zstd
   region: us-west-2
-  parallel_worker_count: 2
+  parallel_worker_count: 4
   bucket: {S3_PLACEHOLDER}
   encoding: json
-  use_native_compression: false
   disable_metadata_ingestion: false
   path_prefix:
     order:
