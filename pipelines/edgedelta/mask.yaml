@@ -53,7 +53,7 @@ nodes:
   parallel_worker_count: 256
   channel_size: 20000
   read_timeout: 1m0s
-  log_parsing_mode: json
+  log_parsing_mode: basic
 - name: http_input_b410_multiprocessor
   type: sequence
   user_description: Multi Processor
@@ -136,12 +136,11 @@ nodes:
   type: s3_output
   user_description: S3 Destination
   schema: Archive
-  compression: gzip
+  compression: zstd
   region: us-west-2
-  parallel_worker_count: 2
+  parallel_worker_count: 6
   bucket: {S3_PLACEHOLDER}
   encoding: json
-  use_native_compression: false
   disable_metadata_ingestion: false
   path_prefix:
     order:
