@@ -50,7 +50,7 @@ nodes:
   user_description: HTTP Source
   port: 8085
   compression: uncompressed
-  parallel_worker_count: 32
+  parallel_worker_count: 256
   channel_size: 20000
   read_timeout: 1m0s
   log_parsing_mode: basic
