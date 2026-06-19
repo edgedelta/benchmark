@@ -76,12 +76,13 @@ update_s3_placeholder() {
 
   echo "Updating S3 placeholder with $S3_BUCKET"
   pushd "$git_root/pipelines" > /dev/null
+  # .yaml: edgedelta/bindplane/otelcol/vector; .conf: fluentd/logstash.
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS sed
-    find . -name '*.yaml' -exec sed -i '' -e "s/{S3_PLACEHOLDER}/$S3_BUCKET/g" {} \;
+    find . \( -name '*.yaml' -o -name '*.conf' \) -exec sed -i '' -e "s/{S3_PLACEHOLDER}/$S3_BUCKET/g" {} \;
   else
     # GNU sed
-    find . -name '*.yaml' -exec sed -i -e "s/{S3_PLACEHOLDER}/$S3_BUCKET/g" {} \;
+    find . \( -name '*.yaml' -o -name '*.conf' \) -exec sed -i -e "s/{S3_PLACEHOLDER}/$S3_BUCKET/g" {} \;
   fi
   popd > /dev/null
 }

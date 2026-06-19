@@ -12,7 +12,7 @@ cribl_benchmark=0
 
 # All pipeline cases and vendors the suite knows about, in canonical run order.
 ALL_CASES=("pass-through" "filter" "mask" "lookup")
-ALL_VENDORS=("edgedelta" "bindplane" "cribl" "otelcol")
+ALL_VENDORS=("edgedelta" "bindplane" "cribl" "otelcol" "fluentd" "logstash")
 
 # Selections default to everything (preserves the previous "run all" behaviour).
 SELECTED_CASES=("${ALL_CASES[@]}")
@@ -285,6 +285,28 @@ function run_otelcol_benchmark() {
   done
 }
 
+function run_fluentd_benchmark() {
+  echo "Running Fluentd benchmark..."
+  echo "Installing Fluentd agent..."
+  run_scripts_on_ec2_instance "$git_root/scripts/install_agent_fluentd.sh"
+  upload_folder_to_ec2_instance "$git_root/pipelines/fluentd"
+  for type in $(cases_for fluentd); do
+    run_command_on_ec2_instance "sudo cp /home/ubuntu/fluentd/$type.conf /etc/fluent/fluentd.conf"
+    trigger_benchmark "fluentd" $type
+  done
+}
+
+function run_logstash_benchmark() {
+  echo "Running Logstash benchmark..."
+  echo "Installing Logstash agent..."
+  run_scripts_on_ec2_instance "$git_root/scripts/install_agent_logstash.sh"
+  upload_folder_to_ec2_instance "$git_root/pipelines/logstash"
+  for type in $(cases_for logstash); do
+    run_command_on_ec2_instance "sudo cp /home/ubuntu/logstash/$type.conf /etc/logstash/conf.d/logstash.conf"
+    trigger_benchmark "logstash" $type
+  done
+}
+
 
 function download_benchmark_results() {
   date_tag=$(date +%Y%m%d_%H%M%S)
@@ -306,13 +328,15 @@ function generate_versions_csv() {
 
   local ssh_args=(-o StrictHostKeyChecking=no -i "$git_root/aws_resources/ec2-benchmark-key.pem" "ubuntu@$INSTANCE_IP")
 
-  local ed_version bindplane_version cribl_version otelcol_version
+  local ed_version bindplane_version cribl_version otelcol_version fluentd_version logstash_version
   ed_version=$(ssh "${ssh_args[@]}" "/opt/edgedelta/agent/edgedelta --version 2>/dev/null | cut -d ',' -f 1 | sed 's/Agent version: //' || echo unknown" 2>/dev/null || echo "unknown")
   bindplane_version=$(ssh "${ssh_args[@]}" "/opt/observiq-otel-collector/observiq-otel-collector --version 2>/dev/null | head -1 | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
   # `cribl version` (subcommand) prints the Cribl product version; `cribl --version`
   # falls through to the bundled Node.js runtime (e.g. v22.x). Extract the X.Y.Z product version.
   cribl_version=$(ssh "${ssh_args[@]}" "/opt/cribl/bin/cribl version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo unknown" 2>/dev/null || echo "unknown")
   otelcol_version=$(ssh "${ssh_args[@]}" "otelcol-contrib --version 2>/dev/null | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
+  fluentd_version=$(ssh "${ssh_args[@]}" "/opt/fluent/bin/fluentd --version 2>/dev/null | awk '{print \$2}' || echo unknown" 2>/dev/null || echo "unknown")
+  logstash_version=$(ssh "${ssh_args[@]}" "/usr/share/logstash/bin/logstash --version 2>/dev/null | awk '{print \$2}' || echo unknown" 2>/dev/null || echo "unknown")
 
   {
     echo "agent,version"
@@ -320,6 +344,8 @@ function generate_versions_csv() {
     echo "bindplane,$bindplane_version"
     echo "cribl,$cribl_version"
     echo "otelcol,$otelcol_version"
+    echo "fluentd,$fluentd_version"
+    echo "logstash,$logstash_version"
   } > "$csv_file"
 
   echo "Agent versions saved to $csv_file"
@@ -333,5 +359,7 @@ maybe_run edgedelta run_ed_benchmark
 maybe_run bindplane run_bindplane_benchmark
 maybe_run cribl run_cribl_benchmark
 maybe_run otelcol run_otelcol_benchmark
+maybe_run fluentd run_fluentd_benchmark
+maybe_run logstash run_logstash_benchmark
 download_benchmark_results
 generate_versions_csv
