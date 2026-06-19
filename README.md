@@ -1,6 +1,6 @@
 # HTTP Input Benchmark Comparison
 
-Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, **Cribl**, and the **OpenTelemetry Collector**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs. The OpenTelemetry Collector runs pass-through, filter, and mask only — its contrib distribution ships no CSV lookup processor, so lookup is reported as N/A.
+Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, **Cribl**, the **OpenTelemetry Collector**, **Fluentd**, and **Logstash**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs. The OpenTelemetry Collector runs pass-through, filter, and mask only — its contrib distribution ships no CSV lookup processor, so lookup is reported as N/A; Fluentd and Logstash run all four.
 
 ## Latest Benchmark Results
 
@@ -10,7 +10,7 @@ Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **
 
 ## Purpose
 
-This repository helps developers evaluate and compare HTTP input throughput for four observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
+This repository helps developers evaluate and compare HTTP input throughput for six observability pipeline platforms. Benchmarks run on a single EC2 instance with consistent load profiles (80, 100, and 120 workers) and a 1-minute test duration per run.
 
 ## Prerequisites
 
@@ -60,7 +60,9 @@ bindplane profile set --apiKey YOUR_API_KEY
 │   ├── bindplane/          # Bindplane YAML configs
 │   ├── cribl/              # Cribl JSON configs and API helper
 │   ├── edgedelta/          # Edge Delta YAML configs and API helper
-│   └── otelcol/            # OpenTelemetry Collector YAML configs
+│   ├── otelcol/            # OpenTelemetry Collector YAML configs
+│   ├── fluentd/            # Fluentd .conf configs
+│   └── logstash/           # Logstash .conf configs
 ├── scripts/                # Agent install scripts (generated/dynamic)
 ├── benchmark_results/      # Downloaded results (gitignored)
 ├── run.sh                  # Main entry point
@@ -98,7 +100,7 @@ From the repository root:
 1. **Checks prerequisites** – Validates env vars and Bindplane CLI config
 2. **Creates AWS resources** – Runs `terraform apply` in `aws_resources/`
 3. **Prepares EC2** – Uploads benchmark scripts and lookup CSV
-4. **Runs benchmarks** – For each platform (Edge Delta → Bindplane → Cribl):
+4. **Runs benchmarks** – For each selected platform (Edge Delta → Bindplane → Cribl → OpenTelemetry Collector → Fluentd → Logstash):
    - Installs or configures the agent
    - For each pipeline type (pass-through, filter, mask, lookup):
      - Applies the pipeline config
@@ -126,7 +128,7 @@ iteration you can restrict the run with two optional flags:
 - `--cases` accepts `pass-through`, `filter`, `mask`, `lookup` (`passthrough` is
   accepted as an alias for `pass-through`). Values may be comma- or
   space-separated.
-- `--vendors` accepts `edgedelta`, `bindplane`, `cribl`, `otelcol`.
+- `--vendors` accepts `edgedelta`, `bindplane`, `cribl`, `otelcol`, `fluentd`, `logstash`.
 - Prerequisite checks (env vars, Bindplane CLI) only run for the selected
   vendors, so you don't need Cribl credentials to run an Edge Delta–only pass.
 - `otelcol` has no `lookup` case; it is skipped automatically if `lookup` is the
@@ -146,7 +148,7 @@ iteration you can restrict the run with two optional flags:
 
 ## Results
 
-Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
+Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector, `fluentd` = Fluentd, `logstash` = Logstash. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
 
 ```
 benchmark_results/
@@ -165,7 +167,15 @@ benchmark_results/
     ├── cribl_lookup.log
     ├── otelcol_pass-through.log
     ├── otelcol_filter.log
-    └── otelcol_mask.log
+    ├── otelcol_mask.log
+    ├── fluentd_pass-through.log
+    ├── fluentd_filter.log
+    ├── fluentd_mask.log
+    ├── fluentd_lookup.log
+    ├── logstash_pass-through.log
+    ├── logstash_filter.log
+    ├── logstash_mask.log
+    └── logstash_lookup.log
 ```
 
 Each log contains loadgen output with throughput (logs/sec), CPU/memory usage, and error counts.
