@@ -47,19 +47,6 @@
             }
           ]
         }
-      },
-      {
-        "id": "sampling",
-        "filter": "true",
-        "conf": {
-          "rules": [
-            {
-              "filter": "true",
-              "rate": 20
-            }
-          ]
-        },
-        "final": true
       }
     ],
     "groups": {}

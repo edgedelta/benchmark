@@ -6,18 +6,6 @@ receivers:
     write_timeout: "10s"
 
 processors:
-  # Synthetic logs carry no trace ID, so derive a hashable key for the
-  # destination sampler to keep ~5% like the other vendors.
-  transform:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        statements:
-          - set(attributes["sampling.key"], SHA256(body)) where IsString(body)
-  probabilistic_sampler:
-    sampling_percentage: 5
-    attribute_source: record
-    from_attribute: sampling.key
   batch:
     send_batch_size: 8192
     send_batch_max_size: 8192
@@ -38,5 +26,5 @@ service:
   pipelines:
     logs:
       receivers: [webhookevent]
-      processors: [transform, probabilistic_sampler, batch]
+      processors: [batch]
       exporters: [awss3]
