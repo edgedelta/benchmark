@@ -18,15 +18,6 @@ check_vars(){
   return 0
 }
 
-install_bindplane_cli() {
-  mkdir -p ~/bindplane
-  curl -L -o ~/bindplane/bindplane.zip https://storage.googleapis.com/bindplane-op-releases/bindplane/latest/bindplane-ee-linux-amd64.zip
-  unzip ~/bindplane/bindplane.zip -d ~/bindplane/
-  sudo mv ~/bindplane/bindplane /usr/local/bin/bindplane
-  mkdir -p ~/.bindplane/
-  bindplane profile set default --api-key "$BINDPLANE_API_KEY" --remote-url https://app.bindplane.com
-  bindplane profile use default
-}
 
 create_benchmark_resources() {
   pushd "$git_root/aws_resources" > /dev/null
@@ -76,7 +67,7 @@ update_s3_placeholder() {
 
   echo "Updating S3 placeholder with $S3_BUCKET"
   pushd "$git_root/pipelines" > /dev/null
-  # .yaml: edgedelta/bindplane/otelcol/vector; .conf: fluentd/logstash.
+  # .yaml: edgedelta/otelcol; .conf: fluentd. (cribl uses .json via its API.)
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS sed
     find . \( -name '*.yaml' -o -name '*.conf' \) -exec sed -i '' -e "s/{S3_PLACEHOLDER}/$S3_BUCKET/g" {} \;
@@ -124,22 +115,4 @@ download_folder_from_ec2_instance() {
   fi
   echo "Downloading folder $source_folder from $INSTANCE_IP"
   scp -r -o StrictHostKeyChecking=no -i "$git_root/aws_resources/ec2-benchmark-key.pem" ubuntu@"$INSTANCE_IP":"$source_folder" "$destination_folder"
-}
-
-# Bindplane agent installation
-get_bindplane_installation_command() {
-  agent_version="latest"
-  install_command=$(bindplane install agent --platform linux-amd64 --version ${agent_version} --agent-type observiq-otel-collector)
-  echo "$install_command -k 'configuration=benchmark'"
-  echo "sudo systemctl stop observiq-otel-collector"
-}
-
-update_bindplane_aws_credentials() {
-  BENCHMARK_AWS_ACCESS_KEY_ID=$(cat "$git_root/aws_resources/benchmark_s3_user_credentials.txt" | jq -r '.id')
-  BENCHMARK_AWS_SECRET_ACCESS_KEY=$(cat "$git_root/aws_resources/benchmark_s3_user_credentials.txt" | jq -r '.secret')
-  cat << EOF
-sudo sed -i "/\[Service\]/a Environment=AWS_ACCESS_KEY_ID=$BENCHMARK_AWS_ACCESS_KEY_ID\nEnvironment=AWS_SECRET_ACCESS_KEY=$BENCHMARK_AWS_SECRET_ACCESS_KEY\nEnvironment=AWS_DEFAULT_REGION=us-west-2" /usr/lib/systemd/system/observiq-otel-collector.service
-sudo systemctl daemon-reload
-sudo systemctl restart observiq-otel-collector
-EOF
 }

@@ -11,9 +11,6 @@ fi
 if [[ "$app" == "edgedelta" ]]; then
   service="edgedelta.service"
   port=8085
-elif [[ "$app" == "bindplane" ]]; then
-  service="observiq-otel-collector"
-  port=7075
 elif [[ "$app" == "cribl" ]]; then
   service="cribl-edge.service"
   port=6085
@@ -23,9 +20,6 @@ elif [[ "$app" == "otelcol" ]]; then
 elif [[ "$app" == "fluentd" ]]; then
   service="fluentd.service"
   port=3085
-elif [[ "$app" == "logstash" ]]; then
-  service="logstash.service"
-  port=2085
 else
   echo "Invalid app"
   exit 1
@@ -141,16 +135,6 @@ for i in 80 100 120; do
     if [[ -n "$cribl_monitor_pid" ]]; then
       kill "$cribl_monitor_pid" 2>/dev/null || true
     fi
-  elif [[ "$app" == "bindplane" ]]; then
-    loadgen \
-      --endpoint "$endpoint" \
-      --format nginx_log \
-      --number 1 \
-      --workers "$i" \
-      --period 1ms \
-      --total-time 1m \
-      --monitor-self \
-      --monitor-process "observiq"
   elif [[ "$app" == "otelcol" ]]; then
     loadgen \
       --endpoint "$endpoint" \
@@ -161,19 +145,6 @@ for i in 80 100 120; do
       --total-time 1m \
       --monitor-self \
       --monitor-process "otelcol-contrib"
-  elif [[ "$app" == "logstash" ]]; then
-    # Logstash runs as a JVM ("java ... org.logstash.Logstash"), so monitor by PID.
-    ls_pid=$(pgrep -f 'org.logstash.Logstash' | head -1)
-    [[ -z "$ls_pid" ]] && echo "Warning: could not find logstash JVM process"
-    loadgen \
-      --endpoint "$endpoint" \
-      --format nginx_log \
-      --number 1 \
-      --workers "$i" \
-      --period 1ms \
-      --total-time 1m \
-      --monitor-self \
-      --monitor-pid "${ls_pid}"
   elif [[ "$app" == "fluentd" ]]; then
     # fluentd runs as ruby under a supervisor; monitor the worker process by PID.
     fd_pid=$(pgrep -f 'under-supervisor' | head -1)

@@ -7,12 +7,11 @@ git_root=$(git rev-parse --show-toplevel)
 source "functions.sh" || exit 1
 
 ed_benchmark=0
-bindplane_benchmark=0
 cribl_benchmark=0
 
 # All pipeline cases and vendors the suite knows about, in canonical run order.
 ALL_CASES=("pass-through" "filter" "mask" "lookup")
-ALL_VENDORS=("edgedelta" "bindplane" "cribl" "otelcol" "fluentd" "logstash")
+ALL_VENDORS=("edgedelta" "cribl" "otelcol" "fluentd")
 
 # Selections default to everything (preserves the previous "run all" behaviour).
 SELECTED_CASES=("${ALL_CASES[@]}")
@@ -155,19 +154,6 @@ function check_prerequisites() {
     check_vars "CRIBL_WORKSPACE" "CRIBL_ORG" "CRIBL_WORKER_GROUP" "CRIBL_CLIENT_ID" "CRIBL_CLIENT_SECRET" "CRIBL_LEADER_TOKEN"
   fi
 
-  if is_vendor_selected "bindplane"; then
-    if ! command -v bindplane &> /dev/null; then
-      echo "Bindplane CLI is not installed"
-      install_bindplane_cli
-    fi
-    # Bindplane API key check
-    if ! bindplane profile get | grep -q apiKey; then
-      echo "Bindplane CLI is not installed or not configured"
-      echo "Please install the Bindplane CLI and configure it with your API key"
-      exit 1
-    fi
-    get_bindplane_installation_command >> "$git_root/scripts/install_agent_bindplane.sh"
-  fi
 }
 
 function create_benchmark_environment() {
@@ -194,13 +180,6 @@ function cleanup_benchmark_environment() {
     popd > /dev/null
     echo "Edge Delta pipeline deleted successfully"
   fi
-  if [[ "$bindplane_benchmark" -eq 1 ]]; then
-    echo "Deleting Bindplane pipeline..."
-    pushd "$git_root/pipelines/bindplane" > /dev/null
-    bindplane delete -f "lookup.yaml"
-    popd > /dev/null
-    echo "Bindplane pipeline deleted successfully"
-  fi
   if [[ "$cribl_benchmark" -eq 1 ]]; then
     echo "Deleting Cribl resources..."
     pushd "$git_root/pipelines/cribl" > /dev/null
@@ -226,25 +205,6 @@ function run_ed_benchmark() {
   for type in $(cases_for edgedelta); do
     ./edgedelta-api.sh full $type.yaml
     trigger_benchmark "edgedelta" $type
-  done
-  popd > /dev/null
-}
-
-function run_bindplane_benchmark() {
-  echo "Running Bindplane benchmark..."
-  echo "Creating Bindplane config before agent installation..."
-  pushd "$git_root/pipelines/bindplane" > /dev/null
-  bindplane apply -f "s3_destination.yaml"
-  bindplane_benchmark=1
-  echo "Installing Bindplane agent..."
-  update_bindplane_aws_credentials >> "$git_root/scripts/update_agent_bindplane.sh"
-  upload_file_to_ec2_instance "$git_root/scripts/update_agent_bindplane.sh" /tmp/update_agent_bindplane.sh
-  run_command_on_ec2_instance "chmod +x /tmp/update_agent_bindplane.sh"
-  run_command_on_ec2_instance "/tmp/update_agent_bindplane.sh"
-  for type in $(cases_for bindplane); do
-    bindplane apply -f "$type.yaml"
-    bindplane rollout start benchmark
-    trigger_benchmark "bindplane" $type
   done
   popd > /dev/null
 }
@@ -296,17 +256,6 @@ function run_fluentd_benchmark() {
   done
 }
 
-function run_logstash_benchmark() {
-  echo "Running Logstash benchmark..."
-  echo "Installing Logstash agent..."
-  run_scripts_on_ec2_instance "$git_root/scripts/install_agent_logstash.sh"
-  upload_folder_to_ec2_instance "$git_root/pipelines/logstash"
-  for type in $(cases_for logstash); do
-    run_command_on_ec2_instance "sudo cp /home/ubuntu/logstash/$type.conf /etc/logstash/conf.d/logstash.conf"
-    trigger_benchmark "logstash" $type
-  done
-}
-
 
 function download_benchmark_results() {
   date_tag=$(date +%Y%m%d_%H%M%S)
@@ -328,24 +277,20 @@ function generate_versions_csv() {
 
   local ssh_args=(-o StrictHostKeyChecking=no -i "$git_root/aws_resources/ec2-benchmark-key.pem" "ubuntu@$INSTANCE_IP")
 
-  local ed_version bindplane_version cribl_version otelcol_version fluentd_version logstash_version
+  local ed_version cribl_version otelcol_version fluentd_version
   ed_version=$(ssh "${ssh_args[@]}" "/opt/edgedelta/agent/edgedelta --version 2>/dev/null | cut -d ',' -f 1 | sed 's/Agent version: //' || echo unknown" 2>/dev/null || echo "unknown")
-  bindplane_version=$(ssh "${ssh_args[@]}" "/opt/observiq-otel-collector/observiq-otel-collector --version 2>/dev/null | head -1 | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
   # `cribl version` (subcommand) prints the Cribl product version; `cribl --version`
   # falls through to the bundled Node.js runtime (e.g. v22.x). Extract the X.Y.Z product version.
   cribl_version=$(ssh "${ssh_args[@]}" "/opt/cribl/bin/cribl version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo unknown" 2>/dev/null || echo "unknown")
   otelcol_version=$(ssh "${ssh_args[@]}" "otelcol-contrib --version 2>/dev/null | awk '{print \$3}' || echo unknown" 2>/dev/null || echo "unknown")
   fluentd_version=$(ssh "${ssh_args[@]}" "/opt/fluent/bin/fluentd --version 2>/dev/null | awk '{print \$2}' || echo unknown" 2>/dev/null || echo "unknown")
-  logstash_version=$(ssh "${ssh_args[@]}" "/usr/share/logstash/bin/logstash --version 2>/dev/null | awk '{print \$2}' || echo unknown" 2>/dev/null || echo "unknown")
 
   {
     echo "agent,version"
     echo "edgedelta,$ed_version"
-    echo "bindplane,$bindplane_version"
     echo "cribl,$cribl_version"
     echo "otelcol,$otelcol_version"
     echo "fluentd,$fluentd_version"
-    echo "logstash,$logstash_version"
   } > "$csv_file"
 
   echo "Agent versions saved to $csv_file"
@@ -356,10 +301,8 @@ trap cleanup_benchmark_environment EXIT
 create_benchmark_environment
 prepare_for_benchmark
 maybe_run edgedelta run_ed_benchmark
-maybe_run bindplane run_bindplane_benchmark
 maybe_run cribl run_cribl_benchmark
 maybe_run otelcol run_otelcol_benchmark
 maybe_run fluentd run_fluentd_benchmark
-maybe_run logstash run_logstash_benchmark
 download_benchmark_results
 generate_versions_csv

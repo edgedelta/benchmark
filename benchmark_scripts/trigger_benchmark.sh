@@ -6,13 +6,13 @@ set -e
 # successfully". pipefail makes the pipeline surface run_benchmark.sh's failure.
 set -o pipefail
 
-# App identifiers: edgedelta (Edge Delta), bindplane (Bindplane), cribl (Cribl), otelcol (OpenTelemetry Collector), fluentd (Fluentd), logstash (Logstash)
+# App identifiers: edgedelta (Edge Delta), cribl (Cribl), otelcol (OpenTelemetry Collector), fluentd (Fluentd)
 app=$1
 type=$2
 
 if [[ -z "$app" ]]; then
   echo "Select app for benchmark:"
-  select app in edgedelta bindplane cribl otelcol fluentd logstash; do
+  select app in edgedelta cribl otelcol fluentd; do
     if [[ -n "$app" ]]; then
       break
     fi
