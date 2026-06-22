@@ -244,10 +244,6 @@ resource "aws_instance" "benchmark" {
   provisioner "remote-exec" {
     script = "../scripts/install_loadgen.sh"
   }
-
-  provisioner "remote-exec" {
-    script = "../scripts/install_agent_bindplane.sh"
-  }
 }
 
 # ---------------------------------------------------------------------------
