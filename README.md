@@ -1,6 +1,6 @@
 # HTTP Input Benchmark Comparison
 
-Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Bindplane**, **Cribl**, and the **OpenTelemetry Collector**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs. The OpenTelemetry Collector runs pass-through, filter, and mask only — its contrib distribution ships no CSV lookup processor, so lookup is reported as N/A.
+Benchmark comparison of HTTP log ingestion performance across **Edge Delta**, **Cribl**, the **OpenTelemetry Collector**, and **Fluentd**. Each platform is tested under identical conditions (pass-through, filter, mask, and lookup pipeline types) using synthetic nginx-style logs. The OpenTelemetry Collector runs pass-through, filter, and mask only — its contrib distribution ships no CSV lookup processor, so lookup is reported as N/A; Fluentd runs all four.
 
 ## Latest Benchmark Results
 
@@ -17,7 +17,6 @@ This repository helps developers evaluate and compare HTTP input throughput for 
 - **Terraform** >= 1.0 (for AWS infrastructure)
 - **AWS credentials** configured (e.g., `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, or `aws configure`)
 - **jq** and **curl** (for API scripts)
-- **Bindplane CLI** installed and configured
 - **SSH** access from your machine (Terraform restricts EC2 SSH to your public IP)
 
 ## Required Environment Variables
@@ -42,14 +41,6 @@ Set these before running `./run.sh`:
 | `CRIBL_CLIENT_SECRET` | Cribl API client secret             |
 | `CRIBL_LEADER_TOKEN`  | Cribl leader token (for agent install)|
 
-### Bindplane
-
-Bindplane uses the CLI profile rather than environment variables. Install the [Bindplane CLI](https://docs.bindplane.observiq.com/docs/bindplane-cli) and configure it with your API key:
-
-```bash
-bindplane profile set --apiKey YOUR_API_KEY
-```
-
 ## Directory Structure
 
 ```
@@ -57,10 +48,10 @@ bindplane profile set --apiKey YOUR_API_KEY
 ├── aws_resources/          # Terraform: EC2, S3, IAM
 ├── benchmark_scripts/      # Load generation and trigger scripts (run on EC2)
 ├── pipelines/              # Pipeline configs per platform
-│   ├── bindplane/          # Bindplane YAML configs
 │   ├── cribl/              # Cribl JSON configs and API helper
 │   ├── edgedelta/          # Edge Delta YAML configs and API helper
-│   └── otelcol/            # OpenTelemetry Collector YAML configs
+│   ├── otelcol/            # OpenTelemetry Collector YAML configs
+│   └── fluentd/            # Fluentd .conf configs
 ├── scripts/                # Agent install scripts (generated/dynamic)
 ├── benchmark_results/      # Downloaded results (gitignored)
 ├── run.sh                  # Main entry point
@@ -77,9 +68,7 @@ bindplane profile set --apiKey YOUR_API_KEY
 
 2. Set all required environment variables (see above).
 
-3. Ensure the Bindplane CLI is installed and configured.
-
-4. Ensure Terraform and AWS credentials are ready. The script will create:
+3. Ensure Terraform and AWS credentials are ready. The script will create:
    - EC2 instance (c8i.2xlarge, Ubuntu 24.04, 50 GB gp3)
    - S3 bucket for log output
    - IAM resources for S3 access
@@ -95,10 +84,10 @@ From the repository root:
 
 **What `run.sh` does:**
 
-1. **Checks prerequisites** – Validates env vars and Bindplane CLI config
+1. **Checks prerequisites** – Validates env vars for the selected vendors
 2. **Creates AWS resources** – Runs `terraform apply` in `aws_resources/`
 3. **Prepares EC2** – Uploads benchmark scripts and lookup CSV
-4. **Runs benchmarks** – For each platform (Edge Delta → Bindplane → Cribl):
+4. **Runs benchmarks** – For each selected platform (Edge Delta → Cribl → OpenTelemetry Collector → Fluentd):
    - Installs or configures the agent
    - For each pipeline type (pass-through, filter, mask, lookup):
      - Applies the pipeline config
@@ -126,8 +115,8 @@ iteration you can restrict the run with two optional flags:
 - `--cases` accepts `pass-through`, `filter`, `mask`, `lookup` (`passthrough` is
   accepted as an alias for `pass-through`). Values may be comma- or
   space-separated.
-- `--vendors` accepts `edgedelta`, `bindplane`, `cribl`, `otelcol`.
-- Prerequisite checks (env vars, Bindplane CLI) only run for the selected
+- `--vendors` accepts `edgedelta`, `cribl`, `otelcol`, `fluentd`.
+- Prerequisite checks (env vars) only run for the selected
   vendors, so you don't need Cribl credentials to run an Edge Delta–only pass.
 - `otelcol` has no `lookup` case; it is skipped automatically if `lookup` is the
   only selected case.
@@ -146,7 +135,7 @@ iteration you can restrict the run with two optional flags:
 
 ## Results
 
-Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `bindplane` = Bindplane, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
+Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector, `fluentd` = Fluentd. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
 
 ```
 benchmark_results/
@@ -155,17 +144,17 @@ benchmark_results/
     ├── edgedelta_filter.log
     ├── edgedelta_mask.log
     ├── edgedelta_lookup.log
-    ├── bindplane_pass-through.log
-    ├── bindplane_filter.log
-    ├── bindplane_mask.log
-    ├── bindplane_lookup.log
     ├── cribl_pass-through.log
     ├── cribl_filter.log
     ├── cribl_mask.log
     ├── cribl_lookup.log
     ├── otelcol_pass-through.log
     ├── otelcol_filter.log
-    └── otelcol_mask.log
+    ├── otelcol_mask.log
+    ├── fluentd_pass-through.log
+    ├── fluentd_filter.log
+    ├── fluentd_mask.log
+    └── fluentd_lookup.log
 ```
 
 Each log contains loadgen output with throughput (logs/sec), CPU/memory usage, and error counts.

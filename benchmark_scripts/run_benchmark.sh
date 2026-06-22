@@ -11,18 +11,25 @@ fi
 if [[ "$app" == "edgedelta" ]]; then
   service="edgedelta.service"
   port=8085
-elif [[ "$app" == "bindplane" ]]; then
-  service="observiq-otel-collector"
-  port=7075
 elif [[ "$app" == "cribl" ]]; then
   service="cribl-edge.service"
   port=6085
 elif [[ "$app" == "otelcol" ]]; then
   service="otelcol-contrib.service"
   port=5085
+elif [[ "$app" == "fluentd" ]]; then
+  service="fluentd.service"
+  port=3085
 else
   echo "Invalid app"
   exit 1
+fi
+
+# loadgen endpoint. Fluentd's in_http derives the tag from the URL path, so it
+# must be posted to a tagged path; everything else accepts the bare root.
+endpoint="http://localhost:$port"
+if [[ "$app" == "fluentd" ]]; then
+  endpoint="http://localhost:$port/benchmark.fluentd"
 fi
 
 # Cleanup function to ensure service is stopped on exit
@@ -117,7 +124,7 @@ for i in 80 100 120; do
     fi
 
     loadgen \
-      --endpoint http://localhost:$port \
+      --endpoint "$endpoint" \
       --format nginx_log \
       --number 1 \
       --workers "$i" \
@@ -128,19 +135,9 @@ for i in 80 100 120; do
     if [[ -n "$cribl_monitor_pid" ]]; then
       kill "$cribl_monitor_pid" 2>/dev/null || true
     fi
-  elif [[ "$app" == "bindplane" ]]; then
-    loadgen \
-      --endpoint http://localhost:$port \
-      --format nginx_log \
-      --number 1 \
-      --workers "$i" \
-      --period 1ms \
-      --total-time 1m \
-      --monitor-self \
-      --monitor-process "observiq"
   elif [[ "$app" == "otelcol" ]]; then
     loadgen \
-      --endpoint http://localhost:$port \
+      --endpoint "$endpoint" \
       --format nginx_log \
       --number 1 \
       --workers "$i" \
@@ -148,9 +145,23 @@ for i in 80 100 120; do
       --total-time 1m \
       --monitor-self \
       --monitor-process "otelcol-contrib"
+  elif [[ "$app" == "fluentd" ]]; then
+    # fluentd runs as ruby under a supervisor; monitor the worker process by PID.
+    fd_pid=$(pgrep -f 'under-supervisor' | head -1)
+    [[ -z "$fd_pid" ]] && fd_pid=$(pgrep -f '[f]luentd' | tail -1)
+    [[ -z "$fd_pid" ]] && echo "Warning: could not find fluentd worker process"
+    loadgen \
+      --endpoint "$endpoint" \
+      --format nginx_log \
+      --number 1 \
+      --workers "$i" \
+      --period 1ms \
+      --total-time 1m \
+      --monitor-self \
+      --monitor-pid "${fd_pid}"
   else
     loadgen \
-      --endpoint http://localhost:$port \
+      --endpoint "$endpoint" \
       --format nginx_log \
       --number 1 \
       --workers "$i" \
