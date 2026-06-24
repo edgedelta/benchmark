@@ -15,6 +15,9 @@ settings:
   live_tail_settings:
     enabled: false
   persisting_cursor_settings: {}
+  parallelism_settings:
+    buffer_flush_workers: "auto"
+    sequence_consumers: "auto"
 
 links:
 - from: ed_self_telemetry_input
