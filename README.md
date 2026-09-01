@@ -50,6 +50,7 @@ Set these before running `./run.sh`:
 ├── pipelines/              # Pipeline configs per platform
 │   ├── cribl/              # Cribl JSON configs and API helper
 │   ├── edgedelta/          # Edge Delta YAML configs and API helper
+│   ├── red/                # Edge Delta Rust agent YAML configs (same schema) + systemd unit
 │   ├── otelcol/            # OpenTelemetry Collector YAML configs
 │   └── fluentd/            # Fluentd .conf configs
 ├── scripts/                # Agent install scripts (generated/dynamic)
@@ -115,7 +116,12 @@ iteration you can restrict the run with two optional flags:
 - `--cases` accepts `pass-through`, `filter`, `mask`, `lookup` (`passthrough` is
   accepted as an alias for `pass-through`). Values may be comma- or
   space-separated.
-- `--vendors` accepts `edgedelta`, `cribl`, `otelcol`, `fluentd`.
+- `--vendors` accepts `edgedelta`, `red`, `cribl`, `otelcol`, `fluentd`.
+  `red` is the Rust rewrite of the Edge Delta agent (repo `edgedelta/red`). It
+  reads the same pipeline YAML as the Go agent (`pipelines/red/*.yaml` differ
+  only in the port). By default its source is packaged from `RED_SRC_DIR`
+  (default `../red`) and compiled on the benchmark instance; set `RED_BINARY`
+  to a prebuilt linux/amd64 binary to skip the build.
 - Prerequisite checks (env vars) only run for the selected
   vendors, so you don't need Cribl credentials to run an Edge Delta–only pass.
 - `otelcol` has no `lookup` case; it is skipped automatically if `lookup` is the
@@ -135,7 +141,7 @@ iteration you can restrict the run with two optional flags:
 
 ## Results
 
-Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `cribl` = Cribl, `otelcol` = OpenTelemetry Collector, `fluentd` = Fluentd. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
+Results are written to `benchmark_results/<timestamp>/` with one log file per platform and pipeline type. File prefixes map to products: `edgedelta` = Edge Delta, `red` = Edge Delta (Rust), `cribl` = Cribl, `otelcol` = OpenTelemetry Collector, `fluentd` = Fluentd. The OpenTelemetry Collector has no `lookup` file (lookup is N/A).
 
 ```
 benchmark_results/

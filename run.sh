@@ -11,7 +11,7 @@ cribl_benchmark=0
 
 # All pipeline cases and vendors the suite knows about, in canonical run order.
 ALL_CASES=("pass-through" "filter" "mask" "lookup")
-ALL_VENDORS=("edgedelta" "cribl" "otelcol" "fluentd")
+ALL_VENDORS=("edgedelta" "red" "cribl" "otelcol" "fluentd")
 
 # Selections default to everything (preserves the previous "run all" behaviour).
 SELECTED_CASES=("${ALL_CASES[@]}")
@@ -30,6 +30,9 @@ Options:
                      Example: --cases pass-through,mask
   --vendors <list>   Comma- or space-separated vendors to run.
                      Valid: ${ALL_VENDORS[*]}
+                     (red = Edge Delta agent written in Rust; built on the
+                     instance from \$RED_SRC_DIR, default ../red, or installed
+                     from a prebuilt linux/amd64 binary at \$RED_BINARY)
                      Example: --vendors edgedelta,cribl
   -h, --help         Show this help and exit.
 
@@ -209,6 +212,39 @@ function run_ed_benchmark() {
   popd > /dev/null
 }
 
+function run_red_benchmark() {
+  echo "Running red (Edge Delta Rust agent) benchmark..."
+  local red_src="${RED_SRC_DIR:-$git_root/../red}"
+  if [[ -n "${RED_BINARY:-}" ]]; then
+    echo "Uploading prebuilt red binary $RED_BINARY"
+    upload_file_to_ec2_instance "$RED_BINARY" /tmp/red
+  else
+    if [[ ! -f "$red_src/Cargo.toml" ]]; then
+      echo "red source not found at $red_src (set RED_SRC_DIR or RED_BINARY)" >&2
+      exit 1
+    fi
+    echo "Packaging red source from $red_src"
+    tar --exclude target --exclude .git --exclude .worktrees -czf /tmp/red-src.tgz -C "$(dirname "$red_src")" "$(basename "$red_src")"
+    upload_file_to_ec2_instance /tmp/red-src.tgz /tmp/red-src.tgz
+  fi
+  echo "Installing red agent..."
+  run_scripts_on_ec2_instance "$git_root/scripts/install_agent_red.sh"
+  upload_folder_to_ec2_instance "$git_root/pipelines/red"
+  local red_bucket
+  red_bucket=$(get_s3_bucket_name)
+  for type in $(cases_for red); do
+    run_command_on_ec2_instance "sudo cp /home/ubuntu/red/$type.yaml /etc/red/config.yaml"
+    trigger_benchmark "red" $type
+    # Evidence that archives reached S3: red's own flush/upload log lines and,
+    # when the aws CLI is available on the runner, the object count in the bucket.
+    run_command_on_ec2_instance "sudo journalctl -u red.service --no-pager -n 400 | grep -E 'flushed object|s3 put_object|failed|panicked' | tail -n 12" || true
+    if command -v aws >/dev/null 2>&1; then
+      echo "S3 objects under edgedelta/ after red $type:"
+      aws s3 ls "s3://$red_bucket/edgedelta/" --recursive --summarize 2>/dev/null | tail -n 2 || true
+    fi
+  done
+}
+
 function run_cribl_benchmark() {
   echo "Running Cribl benchmark..."
   pushd "$git_root/pipelines/cribl" > /dev/null
@@ -277,8 +313,9 @@ function generate_versions_csv() {
 
   local ssh_args=(-o StrictHostKeyChecking=no -i "$git_root/aws_resources/ec2-benchmark-key.pem" "ubuntu@$INSTANCE_IP")
 
-  local ed_version cribl_version otelcol_version fluentd_version
+  local ed_version red_version cribl_version otelcol_version fluentd_version
   ed_version=$(ssh "${ssh_args[@]}" "/opt/edgedelta/agent/edgedelta --version 2>/dev/null | cut -d ',' -f 1 | sed 's/Agent version: //' || echo unknown" 2>/dev/null || echo "unknown")
+  red_version=$(ssh "${ssh_args[@]}" "/opt/red/red --version 2>/dev/null | awk '{print \$2}' || echo unknown" 2>/dev/null || echo "unknown")
   # `cribl version` (subcommand) prints the Cribl product version; `cribl --version`
   # falls through to the bundled Node.js runtime (e.g. v22.x). Extract the X.Y.Z product version.
   cribl_version=$(ssh "${ssh_args[@]}" "/opt/cribl/bin/cribl version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo unknown" 2>/dev/null || echo "unknown")
@@ -288,6 +325,7 @@ function generate_versions_csv() {
   {
     echo "agent,version"
     echo "edgedelta,$ed_version"
+    echo "red,$red_version"
     echo "cribl,$cribl_version"
     echo "otelcol,$otelcol_version"
     echo "fluentd,$fluentd_version"
@@ -301,6 +339,7 @@ trap cleanup_benchmark_environment EXIT
 create_benchmark_environment
 prepare_for_benchmark
 maybe_run edgedelta run_ed_benchmark
+maybe_run red run_red_benchmark
 maybe_run cribl run_cribl_benchmark
 maybe_run otelcol run_otelcol_benchmark
 maybe_run fluentd run_fluentd_benchmark

@@ -8,9 +8,10 @@ You are a benchmark analysis expert that generates concise, table-based comparis
 
 # Input Format
 You will receive benchmark logs in benchmark_results folder from multiple vendors with:
-- Vendors: `edgedelta` knows as "Edge Delta", `cribl` knows as "Cribl", `otelcol` knows as "OpenTelemetry Collector", `fluentd` knows as "Fluentd".
+- Vendors: `edgedelta` knows as "Edge Delta", `red` knows as "Edge Delta (Rust)" (the Rust rewrite of the Edge Delta agent; treat it as a separate vendor row), `cribl` knows as "Cribl", `otelcol` knows as "OpenTelemetry Collector", `fluentd` knows as "Fluentd".
 - A `versions.csv` file with columns `agent,version` listing the installed version of each agent. Read this file and include the versions in the report. The `agent` column uses the benchmark's app identifiers; map them to the fixed `data.json` keys exactly as follows (and treat values case-insensitively):
   - `edgedelta` → `ed`
+  - `red` → `red`
   - `otelcol` (also seen as `otel`, `otelcol-contrib`, `opentelemetry-collector`) → `otel`
   - `cribl` → `cribl`
   - `fluentd` → `fluentd`
@@ -44,6 +45,7 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 | Vendor | Version |
 |--------|---------|
 | Edge Delta | vX.Y.Z |
+| Edge Delta (Rust) | X.Y.Z |
 | Cribl | vX.Y.Z |
 | OpenTelemetry Collector | X.Y.Z |
 | Fluentd | X.Y.Z |
@@ -58,15 +60,17 @@ You will receive benchmark logs in benchmark_results folder from multiple vendor
 | Vendor | Avg Throughput | Peak Throughput | Total Logs | Avg CPU | Peak Memory | Rank |
 |--------|----------------|-----------------|------------|---------|-------------|------|
 | Edge Delta | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 1 |
-| Cribl | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 2 |
-| OpenTelemetry Collector | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 3 |
-| Fluentd | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 4 |
+| Edge Delta (Rust) | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 2 |
+| Cribl | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 3 |
+| OpenTelemetry Collector | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 4 |
+| Fluentd | X.XX logs/sec | Y.YY logs/sec | N | X.X% | XXX MB | 5 |
 
 ### Reliability Comparison
 
 | Vendor | Total Errors | Error Rate | Backpressure (429/503) | Backpressure % | Status |
 |--------|--------------|------------|------------------------|----------------|--------|
 | Edge Delta | 0 | 0.00% | 0 | 0.0% | ✅ |
+| Edge Delta (Rust) | 0 | 0.00% | 0 | 0.0% | ✅ |
 | Cribl | 0 | 0.00% | 120 | 12.5% | ⚠️ |
 | OpenTelemetry Collector | 0 | 0.00% | 0 | 0.0% | ✅ |
 | Fluentd | 0 | 0.00% | 0 | 0.0% | ✅ |
@@ -87,6 +91,7 @@ When producing cross-scenario tables (e.g. average throughput or resource effici
 | Vendor | Pass-Through | Filter | Mask | Lookup |
 |--------|--------------|--------|------|--------|
 | Edge Delta | X.XX | X.XX | X.XX | X.XX |
+| Edge Delta (Rust) | X.XX | X.XX | X.XX | X.XX |
 | Cribl | X.XX | X.XX | X.XX | X.XX |
 | OpenTelemetry Collector | X.XX | X.XX | X.XX | N/A |
 | Fluentd | X.XX | X.XX | X.XX | X.XX |
@@ -96,6 +101,7 @@ When producing cross-scenario tables (e.g. average throughput or resource effici
 | Vendor | Avg CPU | Avg Peak Memory | Throughput per CPU % |
 |--------|---------|-----------------|----------------------|
 | Edge Delta | X.X% | XXX MB | X.XX |
+| Edge Delta (Rust) | X.X% | XXX MB | X.XX |
 | Cribl | X.X% | XXX MB | X.XX |
 | OpenTelemetry Collector | X.X% | XXX MB | X.XX |
 | Fluentd | X.X% | XXX MB | X.XX |
@@ -111,9 +117,10 @@ it must be valid JSON and follow this schema precisely:
   "runId": "<benchmark_results subdir timestamp, e.g. 20260608_111614>",
   "date": "<YYYY-MM-DD>",
   "scenarios": ["Pass-Through", "Filter", "Mask", "Lookup"],
-  "versions": { "ed": "<version>", "otel": "<version>", "cribl": "<version>", "fluentd": "<version>" },
+  "versions": { "ed": "<version>", "red": "<version>", "otel": "<version>", "cribl": "<version>", "fluentd": "<version>" },
   "vendors": {
     "ed":       { "name": "Edge Delta",              "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
+    "red":      { "name": "Edge Delta (Rust)",       "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
     "otel":     { "name": "OpenTelemetry Collector", "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
     "cribl":    { "name": "Cribl",                   "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n },
     "fluentd":  { "name": "Fluentd",                 "avg": [n,n,n,n], "peak": [n,n,n,n], "cpu": n, "mem": n, "perCpu": n }
@@ -122,9 +129,9 @@ it must be valid JSON and follow this schema precisely:
 ```
 
 Rules:
-- Vendor keys are fixed: `ed`, `otel`, `cribl`, `fluentd`. Always include all four.
+- Vendor keys are fixed: `ed`, `red`, `otel`, `cribl`, `fluentd`. Always include all five (a vendor that did not run gets `null` arrays).
 - Populate `versions` from `versions.csv` using the agent→key mapping in the Input
-  Format section (`edgedelta`→`ed`, `otelcol`/`otel*`→`otel`, `cribl`→`cribl`,
+  Format section (`edgedelta`→`ed`, `red`→`red`, `otelcol`/`otel*`→`otel`, `cribl`→`cribl`,
   `fluentd`→`fluentd`). Use the version string verbatim from the CSV. Set an agent's
   version to `null` if it is absent from `versions.csv` or the file is missing — never
   invent or infer a version number.

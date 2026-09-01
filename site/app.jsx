@@ -3,11 +3,12 @@
 const SCENARIOS = ["Pass-Through", "Filter", "Mask", "Lookup"];
 const VENDORS = [
   { key: "ed",       name: "Edge Delta",              short: "Edge Delta" },
+  { key: "red",      name: "Edge Delta (Rust)",       short: "ED Rust" },
   { key: "otel",     name: "OpenTelemetry Collector", short: "OTel Collector" },
   { key: "cribl",    name: "Cribl",                   short: "Cribl" },
   { key: "fluentd",  name: "Fluentd",                 short: "Fluentd" },
 ];
-const PALETTE = { ed: "#00DA63", otel: "#9F4FFF", cribl: "#FF9554", fluentd: "#00C2D7" };
+const PALETTE = { ed: "#00DA63", red: "#E5484D", otel: "#9F4FFF", cribl: "#FF9554", fluentd: "#00C2D7" };
 const vendorColor = (k) => PALETTE[k];
 const PLOT_H = 440;
 

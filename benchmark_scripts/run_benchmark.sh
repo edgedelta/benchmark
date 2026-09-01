@@ -11,6 +11,9 @@ fi
 if [[ "$app" == "edgedelta" ]]; then
   service="edgedelta.service"
   port=8085
+elif [[ "$app" == "red" ]]; then
+  service="red.service"
+  port=7085
 elif [[ "$app" == "cribl" ]]; then
   service="cribl-edge.service"
   port=6085
@@ -135,6 +138,19 @@ for i in 80 100 120; do
     if [[ -n "$cribl_monitor_pid" ]]; then
       kill "$cribl_monitor_pid" 2>/dev/null || true
     fi
+  elif [[ "$app" == "red" ]]; then
+    # pgrep "red" would match unrelated processes; monitor the systemd main PID.
+    red_pid=$(systemctl show -p MainPID --value "$service")
+    [[ -z "$red_pid" || "$red_pid" == "0" ]] && echo "Warning: could not find red main PID"
+    loadgen \
+      --endpoint "$endpoint" \
+      --format nginx_log \
+      --number 1 \
+      --workers "$i" \
+      --period 1ms \
+      --total-time 1m \
+      --monitor-self \
+      --monitor-pid "${red_pid}"
   elif [[ "$app" == "otelcol" ]]; then
     loadgen \
       --endpoint "$endpoint" \
