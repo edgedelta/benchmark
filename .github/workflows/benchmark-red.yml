@@ -1,0 +1,78 @@
+name: Run HTTP Input Benchmark (red comparison)
+
+# Manual run of the benchmark suite including the Rust agent (red). Unlike the
+# weekly workflow it publishes no release and does not touch GitHub Pages: the
+# raw loadgen logs and versions.csv are uploaded as a workflow artifact only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      vendors:
+        description: "Comma-separated vendors (edgedelta, red, cribl, otelcol, fluentd)"
+        required: false
+        default: "edgedelta,red,cribl,otelcol,fluentd"
+      cases:
+        description: "Comma-separated cases (pass-through, filter, mask, lookup)"
+        required: false
+        default: "pass-through,filter,mask,lookup"
+      red_ref:
+        description: "Git ref of edgedelta/red to benchmark"
+        required: false
+        default: "main"
+
+jobs:
+  run-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout benchmark
+        uses: actions/checkout@v6
+      - name: Generate GitHub App token (red checkout)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: edgedelta
+          repositories: red
+      - name: Checkout red (Rust agent)
+        uses: actions/checkout@v6
+        with:
+          repository: edgedelta/red
+          ref: ${{ inputs.red_ref }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: red-src
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_BEDROCK_ROLE }}
+          role-duration-seconds: 14400
+          aws-region: us-west-2
+      - name: Run benchmark
+        env:
+          ED_ORG_ID: ${{ secrets.ED_ORG_ID }}
+          ED_API_TOKEN: ${{ secrets.ED_API_TOKEN }}
+          CRIBL_CLIENT_ID: ${{ secrets.CRIBL_CLIENT_ID }}
+          CRIBL_CLIENT_SECRET: ${{ secrets.CRIBL_CLIENT_SECRET }}
+          CRIBL_LEADER_TOKEN: ${{ secrets.CRIBL_LEADER_TOKEN }}
+          CRIBL_ORG: ${{ secrets.CRIBL_ORG }}
+          CRIBL_WORKSPACE: ${{ secrets.CRIBL_WORKSPACE }}
+          CRIBL_WORKER_GROUP: ${{ secrets.CRIBL_WORKER_GROUP }}
+          RED_SRC_DIR: ${{ github.workspace }}/red-src
+        run: |
+          ./run.sh --vendors "${{ inputs.vendors }}" --cases "${{ inputs.cases }}"
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.run_id }}
+          path: |
+            benchmark_results/*/*.log
+            benchmark_results/*/versions.csv
+          if-no-files-found: warn
